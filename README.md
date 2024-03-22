@@ -12,16 +12,16 @@ With intuitive methods and comprehensive documentation, our API connector empowe
 
 ### Usage:
 
-- Add dependency to your project: 
+- Add package to your project
   ```bash
     composer require drive/scaleflex-api-connector`
     ```
-- Copy configuration file to your project: 
+- Copy configuration file to your project
   ```bash
     php artisan vendor:publish --provider="Drive\ScaleflexApiConnector\ScaleflexServiceProvider" --tag="config"`
   ```
-- Set required environment variable values:
-  - `SCALEFLEX_CONTAINER_ID` - API secret for Scale
+- Set required environment variable values
+  - `SCALEFLEX_CONTAINER_ID` - Container ID (can be found in Scaleflex hub)
   - `SCALEFLEX_API_KEY` - API key for Scaleflex API
 
 ### Endpoint Coverage:
@@ -34,7 +34,7 @@ Test suite is available in the package. To run tests, execute the following comm
 
 #### Feature Tests:
 ```bash
-composer run tests
+composer run test
 ```
 
 #### Code Coverage:
