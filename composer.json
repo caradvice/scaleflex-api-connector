@@ -1,0 +1,74 @@
+{
+    "name": "drive/scaleflex-api-connector",
+    "description": "Wrapper for the Scaleflex API (https://developers.scaleflex.com/)",
+    "authors": [
+        {
+            "name": "Daniel Berry",
+            "email": "daniel.berry@drive.com.au"
+        }
+    ],
+    "type": "library",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "license": "MIT",
+    "version": "1.0.3",
+    "require": {
+        "php": "^8.1",
+        "guzzlehttp/guzzle": "^7.8.1",
+        "illuminate/support": "^10.48",
+        "illuminate/config": "^10.48",
+        "dragon-code/simple-dto": "^2.8"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.14",
+        "mockery/mockery": "^1.6",
+        "orchestra/testbench": "^8.22",
+        "pestphp/pest": "^2.34",
+        "pestphp/pest-plugin-laravel": "^2.3",
+        "phpstan/phpstan": "^1.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drive\\ScaleflexApiConnector\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Drive\\ScaleflexApiConnector\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Drive\\ScaleflexApiConnector\\ScaleflexServiceProvider"
+            ]
+        },
+        "aliases": [
+            "Drive\\ScaleflexApiConnector\\Facades\\ScaleflexApi"
+        ]
+    },
+    "scripts": {
+        "test": [
+            "vendor/bin/pest --parallel"
+        ],
+        "coverage": [
+            "vendor/bin/pest --parallel --coverage"
+        ],
+        "analyse": [
+            "vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=4G"
+        ],
+        "lint": [
+            "vendor/bin/pint"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "platform": {
+            "php": "8.1"
+        }
+    }
+}
