@@ -32,9 +32,8 @@ class ScaleflexServiceProvider extends ServiceProvider implements DeferrableProv
                         [
                             'base_uri' => $config->get('scaleflex.uri'),
                             'headers'  => [
-                                'Content-Type'    => 'application/json',
                                 'X-Filerobot-Key' => $config->get('scaleflex.api_key'),
-                                'User-Agent'      => 'Drive/Scaleflex-Connector (https://www.drive.com.au)'
+                                'User-Agent'      => 'Scaleflex API Connector (https://github.com/caradvice/scaleflex-api-connector)'
                             ],
                         ]
                     );

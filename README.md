@@ -1,8 +1,6 @@
 ### Description:
 
-Introducing our PHP API Connector for Scaleflex, the digital asset management platform designed to streamline media workflows. Our connector offers seamless integration with Scaleflex, enabling developers to effortlessly interact with Scaleflex's robust features and functionalities directly from their PHP applications.
-
-With intuitive methods and comprehensive documentation, our API connector empowers developers to effortlessly manage digital assets, streamline media operations, and enhance user experiences within their PHP projects. Whether you're building a content-rich website, a dynamic media application, or a sophisticated digital platform, our PHP API Connector for Scaleflex provides the essential bridge for leveraging Scaleflex's powerful capabilities with ease.
+The Scaleflex PHP API Connector is a powerful tool designed to seamlessly integrate your PHP applications with Filerobot, a comprehensive digital asset management platform offered by Scaleflex. With this connector, developers can effortlessly leverage Filerobot's robust features to manage, optimize, and deliver digital assets within their PHP projects.
 
 ### Requirements:
 
@@ -14,7 +12,7 @@ With intuitive methods and comprehensive documentation, our API connector empowe
 
 - Add package to your project
   ```bash
-    composer require drive/scaleflex-api-connector`
+    composer require caradvice/scaleflex-api-connector
     ```
 - Copy configuration file to your project
   ```bash
@@ -26,6 +24,7 @@ With intuitive methods and comprehensive documentation, our API connector empowe
 
 ### Endpoint Coverage:
 
+- [File Upload](https://developers.scaleflex.com/#ed2b17ed-5131-4b5d-a9c2-c40d74154f32)
 - [Remote File Upload](https://developers.scaleflex.com/#e3b464d2-c176-418b-890c-acaaa369b521)
 
 ### Testing:
@@ -34,10 +33,10 @@ Test suite is available in the package. To run tests, execute the following comm
 
 #### Feature Tests:
 ```bash
-composer run test
+composer test
 ```
 
 #### Code Coverage:
 ```bash
-composer run coverage
+composer coverage
 ```
