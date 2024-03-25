@@ -1,5 +1,5 @@
 ### Scaleflex API Connector
-[![Tests](https://github.com/caradvice/scaleflex-api-connector/actions/workflows/run-tests.yml/badge.svg)](https://github.com/caradvice/scaleflex-api-connector/actions/workflows/run-tests.yml)
+[![Latest Stable Version](http://poser.pugx.org/drive/scaleflex-api-connector/v)](https://packagist.org/packages/drive/scaleflex-api-connector) [![PHP Version](http://poser.pugx.org/drive/scaleflex-api-connector/require/php)](https://packagist.org/packages/drive/scaleflex-api-connector) [![Downloads](http://poser.pugx.org/drive/scaleflex-api-connector/downloads)](https://packagist.org/packages/drive/scaleflex-api-connector) [![Tests](https://github.com/caradvice/scaleflex-api-connector/actions/workflows/run-tests.yml/badge.svg)](https://github.com/caradvice/scaleflex-api-connector/actions/workflows/run-tests.yml) [![codecov](https://codecov.io/gh/caradvice/scaleflex-api-connector/graph/badge.svg?token=TBDYXHENGN)](https://codecov.io/gh/caradvice/scaleflex-api-connector)
 
 #### Description:
 
