@@ -1,4 +1,4 @@
-name: PHP Composer
+name: Code Coverage
 
 on:
   push:
@@ -16,6 +16,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Setup PHP with PCOV and Composer
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        tools: composer:v2
+        coverage: pcov
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
