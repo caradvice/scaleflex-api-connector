@@ -11,7 +11,6 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "license": "GPL-3.0-only",
-    "version": "1.0.4",
     "require": {
         "php": "^8.1",
         "dragon-code/simple-dto": "^2.8",
