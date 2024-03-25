@@ -3,21 +3,21 @@
 namespace Drive\ScaleflexApiConnector\Services;
 
 use Drive\ScaleflexApiConnector\Contracts\BaseApiClientContract;
-use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Client;
 use GuzzleHttp\Promise\PromiseInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class BaseApiClient implements BaseApiClientContract
 {
     /**
-     * @var ClientInterface
+     * @var Client
      */
-    protected ClientInterface $client;
+    protected Client $client;
 
     /**
-     * @param  ClientInterface  $client
+     * @param  Client  $client
      */
-    public function __construct(ClientInterface $client)
+    public function __construct(Client $client)
     {
         $this->client = $client;
     }

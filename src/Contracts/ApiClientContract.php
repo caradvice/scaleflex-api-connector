@@ -9,7 +9,7 @@ use Psr\Http\Message\StreamInterface;
 interface ApiClientContract
 {
     /**
-     * @param string|resource|StreamInterface $file File path or resource or stream
+     * @param  string|resource|StreamInterface $file File path or resource or stream
      * @param  array  $meta
      * @param  string  $folder
      * @return FileUploadResponse
@@ -17,10 +17,10 @@ interface ApiClientContract
     public function fileUpload($file, array $meta = [], string $folder = '/'): FileUploadResponse;
 
     /**
-     * @param string|resource|StreamInterface $file File path or resource or stream
+     * @param  string|resource|StreamInterface  $file  File path or resource or stream
      * @param  array  $meta
      * @param  string  $folder
-     * @return FileUploadResponse
+     * @return PromiseInterface
      */
     public function fileUploadAsync($file, array $meta = [], string $folder = '/'): PromiseInterface;
 

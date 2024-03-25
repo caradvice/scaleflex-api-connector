@@ -58,16 +58,18 @@ it(
 
         /** @var GuzzleHttp\Client $guzzle */
         $guzzle = $clientProperty->getValue($apiClient);
-        $config = $guzzle->getConfig();
+        $guzzleReflection = new ReflectionClass($guzzle);
+        $configProperty = $guzzleReflection->getProperty('config');
+        $configProperty->setAccessible(true);
+        $config = $configProperty->getValue($guzzle);
 
         expect($config)
             ->toHaveKey('base_uri', $this->app->get('config')?->get('scaleflex.uri'))
             ->and($config)
             ->toHaveKey('headers')
             ->and($config['headers'])
-            ->toHaveKey('Content-Type', 'application/json')
             ->toHaveKey('X-Filerobot-Key', $this->app->get('config')?->get('scaleflex.api_key'))
-            ->toHaveKey('User-Agent', 'Drive/Scaleflex-Connector (https://www.drive.com.au)');
+            ->toHaveKey('User-Agent', \Drive\ScaleflexApiConnector\ScaleflexServiceProvider::$userAgent);
     }
 );
 

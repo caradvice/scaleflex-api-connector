@@ -14,6 +14,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
 {
     /**
      * @inheritDoc
+     * @throws JsonException
      */
     public function fileUpload($file, array $meta = [], string $folder = '/'): FileUploadResponse
     {
@@ -26,7 +27,8 @@ class ApiClient extends BaseApiClient implements ApiClientContract
     public function fileUploadAsync($file, array $meta = [], string $folder = '/'): PromiseInterface
     {
         return $this->postAsync(
-            'files', [
+            'files',
+            [
                        'multipart' => [
                            [
                                'name'     => 'file',
@@ -39,12 +41,11 @@ class ApiClient extends BaseApiClient implements ApiClientContract
                        ],
                        'query'     => ['folder' => $folder],
                    ]
-        )->then(fn(ResponseInterface $response) => FileUploadResponse::make(json_decode($response->getBody()->getContents(), TRUE, 512, JSON_THROW_ON_ERROR)['file']));
+        )->then(fn (ResponseInterface $response) => FileUploadResponse::make(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['file']));
     }
 
     /**
      * @inheritDoc
-     * @throws JsonException
      */
     public function remoteUpload(array $files, string $folder = '/'): FileUploadResponse
     {
@@ -57,6 +58,6 @@ class ApiClient extends BaseApiClient implements ApiClientContract
     public function remoteUploadAsync(array $files, string $folder = '/'): PromiseInterface
     {
         return $this->postAsync('files', ['json' => ['files_urls' => $files], 'query' => ['folder' => $folder]])
-            ->then(fn(ResponseInterface $response) => FileUploadResponse::make(json_decode($response->getBody()->getContents(), TRUE, 512, JSON_THROW_ON_ERROR)['file']));
+            ->then(fn (ResponseInterface $response) => FileUploadResponse::make(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['file']));
     }
 }

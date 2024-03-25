@@ -5,7 +5,6 @@ namespace Drive\ScaleflexApiConnector;
 use Drive\ScaleflexApiConnector\Contracts\ApiClientContract;
 use Drive\ScaleflexApiConnector\Services\Scaleflex\ApiClient;
 use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
 use Illuminate\Config\Repository as Config;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Support\DeferrableProvider;
@@ -13,6 +12,11 @@ use Illuminate\Support\ServiceProvider;
 
 class ScaleflexServiceProvider extends ServiceProvider implements DeferrableProvider
 {
+    /**
+     * @var string
+     */
+    public static string $userAgent = 'Scaleflex API Connector (https://github.com/caradvice/scaleflex-api-connector)';
+
     /**
      * @return void
      * @throws BindingResolutionException
@@ -25,7 +29,7 @@ class ScaleflexServiceProvider extends ServiceProvider implements DeferrableProv
         $this->app->bind(ApiClientContract::class, ApiClient::class);
         $this->app
             ->when(ApiClient::class)
-            ->needs(ClientInterface::class)
+            ->needs(Client::class)
             ->give(
                 function () use ($config) {
                     return new Client(
@@ -33,7 +37,7 @@ class ScaleflexServiceProvider extends ServiceProvider implements DeferrableProv
                             'base_uri' => $config->get('scaleflex.uri'),
                             'headers'  => [
                                 'X-Filerobot-Key' => $config->get('scaleflex.api_key'),
-                                'User-Agent'      => 'Scaleflex API Connector (https://github.com/caradvice/scaleflex-api-connector)'
+                                'User-Agent'      => self::$userAgent
                             ],
                         ]
                     );
