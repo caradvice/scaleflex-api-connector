@@ -168,7 +168,7 @@ it(
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
-        $upload = $apiClient->base64Upload($file, ['test' => 123], '/Test');
+        $upload = $apiClient->base64Upload($file, 'sky', ['test' => 123], '/Test', true);
 
         expect($upload)
             ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
