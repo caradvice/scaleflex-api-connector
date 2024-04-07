@@ -8,6 +8,7 @@
 /.idea export-ignore
 /.vscode export-ignore
 /tests export-ignore
+/storage/tests export-ignore
 .editorconfig export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore

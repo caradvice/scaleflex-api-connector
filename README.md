@@ -27,7 +27,9 @@ The Scaleflex PHP API Connector is a powerful tool designed to seamlessly integr
 
 #### Endpoint Coverage:
 
-- [File Upload](https://developers.scaleflex.com/#ed2b17ed-5131-4b5d-a9c2-c40d74154f32)
+- [File Details](https://developers.scaleflex.com/#5a97d86a-0f37-460a-b87d-502269ed406d)
+- [Multipart File Upload](https://developers.scaleflex.com/#ed2b17ed-5131-4b5d-a9c2-c40d74154f32)
+- [Base64 File Upload](https://developers.scaleflex.com/#75975094-04fa-402d-8125-ade2618881b9)
 - [Remote File Upload](https://developers.scaleflex.com/#e3b464d2-c176-418b-890c-acaaa369b521)
 
 #### Testing:

@@ -12,42 +12,61 @@ use Illuminate\Support\Str;
  * @property string $name
  * @property int $height
  * @property int $width
+ * @property int $area
+ * @property string $orientation
  * @property int $sizeInBytes
  * @property string $mimeType
  * @property string $format
  * @property string $colourSpace
  * @property string $publicUrl
  * @property string $permalinkUrl
+ * @property string $thumbnailUrl
+ * @property string $thumbnailUuid
  * @property string $cdnUrl
  * @property string $path
  * @property string $sha1Hash
  * @property string $folderUuid
  * @property string $folderPath
+ * @property bool $isFavorite
  * @property Collection $meta
+ * @property Collection $tags
+ * @property Collection $labels
+ * @property Collection $visibility
  * @property CarbonImmutable $createdAt
  * @property CarbonImmutable $modifiedAt
  */
-class FileUploadResponse extends DataTransferObject
+class FileDetails extends DataTransferObject
 {
     /**
      * @var string[]
      */
     protected $map = [
-        'info.img_type' => 'format',
-        'info.img_color_space' => 'colourSpace',
-        'info.img_w' => 'width',
-        'info.img_h' => 'height',
-        'type' => 'mimeType',
-        'size.bytes' => 'sizeInBytes',
-        'url.public' => 'publicUrl',
-        'url.permalink' => 'permalinkUrl',
-        'url.cdn' => 'cdnUrl',
-        'url.path' => 'path',
-        'hash.sha1' => 'sha1Hash',
-        'folder.uuid' => 'folderUuid',
-        'folder.name' => 'folderPath',
-        'created_at' => 'createdAt',
-        'modified_at' => 'modifiedAt',
+        'file.uuid' => 'uuid',
+        'file.name' => 'name',
+        'file.info.img_type' => 'format',
+        'file.info.img_color_space' => 'colourSpace',
+        'file.info.img_w' => 'width',
+        'file.info.img_h' => 'height',
+        'file.info.area' => 'area',
+        'file.info.img_o' => 'orientation',
+        'file.type' => 'mimeType',
+        'file.size.bytes' => 'sizeInBytes',
+        'file.url.public' => 'publicUrl',
+        'file.url.permalink' => 'permalinkUrl',
+        'file.url.cdn' => 'cdnUrl',
+        'file.info.thumbnail' => 'thumbnailUrl',
+        'file.info.thumbnail_uuid' => 'thumbnailUuid',
+        'file.url.path' => 'path',
+        'file.hash.sha1' => 'sha1Hash',
+        'file.folder.uuid' => 'folderUuid',
+        'file.folder.name' => 'folderPath',
+        'file.is_favorite' => 'isFavorite',
+        'file.created_at' => 'createdAt',
+        'file.modified_at' => 'modifiedAt',
+        'file.meta' => 'meta',
+        'file.tags' => 'tags',
+        'file.labels' => 'labels',
+        'file.visibility' => 'visibility',
     ];
 
     /**
@@ -69,6 +88,16 @@ class FileUploadResponse extends DataTransferObject
      * @var int|null
      */
     public ?int $width = null;
+
+    /**
+     * @var int|null
+     */
+    public ?int $area = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $orientation = null;
 
     /**
      * @var int|null
@@ -108,6 +137,16 @@ class FileUploadResponse extends DataTransferObject
     /**
      * @var string|null
      */
+    public ?string $thumbnailUrl = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $thumbnailUuid = null;
+
+    /**
+     * @var string|null
+     */
     public ?string $path = null;
 
     /**
@@ -126,9 +165,29 @@ class FileUploadResponse extends DataTransferObject
     public ?string $folderPath = null;
 
     /**
+     * @var bool|null
+     */
+    public ?bool $isFavorite = null;
+
+    /**
      * @var Collection|null
      */
     public ?Collection $meta = null;
+
+    /**
+     * @var Collection|null
+     */
+    public ?Collection $tags = null;
+
+    /**
+     * @var Collection|null
+     */
+    public ?Collection $labels = null;
+
+    /**
+     * @var Collection|null
+     */
+    public ?Collection $visibility = null;
 
     /**
      * @var CarbonImmutable|null
@@ -154,6 +213,42 @@ class FileUploadResponse extends DataTransferObject
      * @return Collection
      */
     protected function castMeta($value): Collection
+    {
+        return new Collection($value);
+    }
+
+    /**
+     * @param $value
+     * @return Collection
+     */
+    protected function castTags($value): Collection
+    {
+        return new Collection($value);
+    }
+
+    /**
+     * @param $value
+     * @return Collection
+     */
+    protected function castLabels($value): Collection
+    {
+        return new Collection($value);
+    }
+
+    /**
+     * @param $value
+     * @return Collection
+     */
+    protected function castVisibility($value): Collection
+    {
+        return new Collection($value);
+    }
+
+    /**
+     * @param $value
+     * @return Collection
+     */
+    protected function castInfo($value): Collection
     {
         return new Collection($value);
     }

@@ -1,6 +1,53 @@
 <?php
 
 it(
+    'gets file details synchronously',
+    function () {
+
+        $response = loadFixture('scaleflex-file-details', 'response');
+
+        $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
+        $baseApiClient->shouldReceive('getAsync')
+            ->once()
+            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response))));
+
+        /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
+        $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
+        $upload = $apiClient->fileDetails("a02e2968-9378-59bb-85a1-fa56d8d50000");
+
+        expect($upload)
+            ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
+            ->and($upload->uuid)
+            ->toBeString()
+            ->toEqual($response['file']['uuid'])
+            ->and($upload->createdAt)
+            ->toBeInstanceOf(\Carbon\CarbonImmutable::class)
+            ->and($upload->toArray())
+            ->toBeArray();
+    }
+);
+
+it(
+    'gets file details asynchronously',
+    function () {
+
+        $response = loadFixture('scaleflex-file-details', 'response');
+
+        $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
+        $baseApiClient->shouldReceive('getAsync')
+            ->once()
+            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response))));
+
+        /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
+        $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
+        $upload = $apiClient->fileDetailsAsync("a02e2968-9378-59bb-85a1-fa56d8d50000");
+
+        expect($upload)
+            ->toBeInstanceOf(\GuzzleHttp\Promise\PromiseInterface::class);
+    }
+);
+
+it(
     'uploads a file synchronously',
     function ($file) {
 
@@ -16,7 +63,7 @@ it(
         $upload = $apiClient->fileUpload($file, ['test' => 123], '/Test');
 
         expect($upload)
-            ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileUploadResponse::class)
+            ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
             ->and($upload->uuid)
             ->toBeString()
             ->toEqual($response['file']['uuid'])
@@ -27,9 +74,9 @@ it(
     }
 )->with(
     [
-        'path' => realpath(__DIR__ . '/../Files/sky.jpeg'),
-        'resource' => \GuzzleHttp\Psr7\Utils::tryFopen(__DIR__ . '/../Files/sky.jpeg', 'r'),
-        'stream' => \GuzzleHttp\Psr7\Utils::streamFor(__DIR__ . '/../Files/sky.jpeg'),
+        'path'     => realpath(__DIR__ . '/../../storage/tests/sky.jpeg'),
+        'resource' => \GuzzleHttp\Psr7\Utils::tryFopen(__DIR__ . '/../../storage/tests/sky.jpeg', 'r'),
+        'stream'   => \GuzzleHttp\Psr7\Utils::streamFor(__DIR__ . '/../../storage/tests/sky.jpeg'),
     ]
 );
 
@@ -53,9 +100,9 @@ it(
     }
 )->with(
     [
-        'path' => realpath(__DIR__ . '/../Files/sky.jpeg'),
-        'resource' => \GuzzleHttp\Psr7\Utils::tryFopen(__DIR__ . '/../Files/sky.jpeg', 'r'),
-        'stream' => \GuzzleHttp\Psr7\Utils::streamFor(__DIR__ . '/../Files/sky.jpeg'),
+        'path'     => realpath(__DIR__ . '/../../storage/tests/sky.jpeg'),
+        'resource' => \GuzzleHttp\Psr7\Utils::tryFopen(__DIR__ . '/../../storage/tests/sky.jpeg', 'r'),
+        'stream'   => \GuzzleHttp\Psr7\Utils::streamFor(__DIR__ . '/../../storage/tests/sky.jpeg'),
     ]
 );
 
@@ -76,7 +123,7 @@ it(
         $upload = $apiClient->remoteUpload($input['files_urls'], '/Test');
 
         expect($upload)
-            ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileUploadResponse::class)
+            ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
             ->and($upload->uuid)
             ->toBeString()
             ->toEqual($response['file']['uuid'])
@@ -106,4 +153,37 @@ it(
         expect($upload)
             ->toBeInstanceOf(\GuzzleHttp\Promise\PromiseInterface::class);
     }
+);
+
+it(
+    'uploads a base64 encoded file synchronously',
+    function ($file) {
+
+        $response = loadFixture('scaleflex-remote-file-upload', 'response');
+
+        $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
+        $baseApiClient->shouldReceive('requestAsync')
+            ->once()
+            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response))));
+
+        /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
+        $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
+        $upload = $apiClient->base64Upload($file, ['test' => 123], '/Test');
+
+        expect($upload)
+            ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
+            ->and($upload->uuid)
+            ->toBeString()
+            ->toEqual($response['file']['uuid'])
+            ->and($upload->createdAt)
+            ->toBeInstanceOf(\Carbon\CarbonImmutable::class)
+            ->and($upload->toArray())
+            ->toBeArray();
+    }
+)->with(
+    [
+        'path'     => realpath(__DIR__ . '/../../storage/tests/sky.jpeg'),
+        'resource' => \GuzzleHttp\Psr7\Utils::tryFopen(__DIR__ . '/../../storage/tests/sky.jpeg', 'r'),
+        'stream'   => \GuzzleHttp\Psr7\Utils::streamFor(__DIR__ . '/../../storage/tests/sky.jpeg'),
+    ]
 );

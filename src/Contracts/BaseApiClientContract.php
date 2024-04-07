@@ -12,6 +12,20 @@ interface BaseApiClientContract
      * @param  array  $options
      * @return ResponseInterface
      */
+    public function get(string $uri, array $options = []): ResponseInterface;
+
+    /**
+     * @param  string  $uri
+     * @param  array  $options
+     * @return PromiseInterface
+     */
+    public function getAsync(string $uri, array $options = []): PromiseInterface;
+
+    /**
+     * @param  string  $uri
+     * @param  array  $options
+     * @return ResponseInterface
+     */
     public function post(string $uri, array $options = []): ResponseInterface;
 
     /**

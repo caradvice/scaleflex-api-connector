@@ -1,0 +1,69 @@
+{
+    "response": {
+        "status": "success",
+        "file": {
+            "uuid": "a02e2968-9378-59bb-85a1-fa56d8d50000",
+            "name": "e73048748fdcc151c2d5abfcb88f6d0b-mM3QWG9e.webp",
+            "extension": "webp",
+            "size": {
+                "bytes": 10366,
+                "pretty": "10.12 KB"
+            },
+            "flags": null,
+            "type": "image/webp",
+            "info": {
+                "area": 60000,
+                "ext": "webp",
+                "face_count": 0,
+                "img_color_space": "RGB",
+                "img_h": 300,
+                "img_o": "PO",
+                "img_type": "WEBP",
+                "img_w": 200,
+                "metadata": {},
+                "thumbnail": "https://container.filerobot.com/.internal/thumbnails/a02e2968-9378-59bb-85a1-fa56d8d50000.jpg",
+                "thumbnail_uuid": "c85d9091-819b-50f5-8a0b-79d5f0350000",
+                "visibility": 1
+            },
+            "meta": {
+                "foo": "bar"
+            },
+            "tags": {},
+            "labels": [],
+            "relevance": null,
+            "visibility": {
+                "value": "VISIBILITY_INHERIT",
+                "inherited": "VISIBILITY_ORGANISATION",
+                "set": "VISIBILITY_INHERIT",
+                "actual": "VISIBILITY_ORGANISATION"
+            },
+            "is_favorite": null,
+            "url": {
+                "public": "https://store.filerobot.com/container/Test/e73048748fdcc151c2d5abfcb88f6d0b-mM3QWG9e.webp",
+                "permalink": "https://api.filerobot.com/container/v4/get/a02e2968-9378-59bb-85a1-fa56d8d50000",
+                "cdn": "https://container.filerobot.com/Test/e73048748fdcc151c2d5abfcb88f6d0b-mM3QWG9e.webp?vh=f7434c",
+                "path": "/Test/e73048748fdcc151c2d5abfcb88f6d0b-mM3QWG9e.webp"
+            },
+            "hash": {
+                "sha1": "f7434c71e71f000094ec512f1b6976fb247d0fae",
+                "blurhash": null
+            },
+            "iptc_xml": {},
+            "created_at": "2024-04-04T02:40:22Z",
+            "modified_at": "2024-04-04T02:40:27Z",
+            "folder": {
+                "uuid": "11481872-c424-5d92-b3c3-80721ddd5fec",
+                "name": "/Test"
+            },
+            "product": {
+                "ref": null,
+                "position": null
+            }
+        },
+        "api_version": {
+            "hash": "129485ff5f675f6c3382054cc180d084505e8f7f",
+            "datetime": "2024-04-02T03:26:02+00:00",
+            "module": "elastic_v2"
+        }
+    }
+}

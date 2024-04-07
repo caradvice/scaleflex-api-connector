@@ -15,7 +15,7 @@ uses(TestCase::class)->in(__DIR__);
  */
 function loadFixture($file, $key, $override = null, $value = null)
 {
-    $fixture = json_decode(file_get_contents(__DIR__ . "/Fixtures/{$file}.json"), true, 512, JSON_THROW_ON_ERROR)[$key];
+    $fixture = json_decode(file_get_contents(__DIR__ . "/../storage/tests/fixtures/{$file}.json"), true, 512, JSON_THROW_ON_ERROR)[$key];
 
     if(!is_null($override)) {
 

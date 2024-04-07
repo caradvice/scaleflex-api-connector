@@ -25,6 +25,22 @@ class BaseApiClient implements BaseApiClientContract
     /**
      * @inheritDoc
      */
+    public function get(string $uri, array $options = []): ResponseInterface
+    {
+        return $this->getAsync($uri, $options)->wait();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAsync(string $uri, array $options = []): PromiseInterface
+    {
+        return $this->client->getAsync($uri, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function post(string $uri, array $options = []): ResponseInterface
     {
         return $this->postAsync($uri, $options)->wait();
