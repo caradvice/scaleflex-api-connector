@@ -52,18 +52,18 @@ class ApiClient extends BaseApiClient implements ApiClientContract
         return $this->postAsync(
             'files',
             [
-                       'multipart' => [
-                           [
-                               'name'     => 'file',
-                               'contents' => is_resource($file) ? $file : Utils::tryFopen($file, 'r'),
-                           ],
-                           [
-                               'name'     => 'meta',
-                               'contents' => json_encode($meta, JSON_THROW_ON_ERROR),
-                           ],
-                       ],
-                       'query'     => $query,
-                   ]
+                'multipart' => [
+                    [
+                        'name'     => 'file',
+                        'contents' => is_resource($file) ? $file : Utils::tryFopen($file, 'r'),
+                    ],
+                    [
+                        'name'     => 'meta',
+                        'contents' => json_encode($meta, JSON_THROW_ON_ERROR),
+                    ],
+                ],
+                'query'     => $query,
+            ]
         )->then(fn (ResponseInterface $response) => FileDetails::make(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)));
     }
 
@@ -94,15 +94,15 @@ class ApiClient extends BaseApiClient implements ApiClientContract
     /**
      * @inheritDoc
      */
-    public function base64Upload($file, array $meta = [], string $folder = '/', bool $overwrite = false): FileDetails
+    public function base64Upload($file, ?string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): FileDetails
     {
-        return $this->base64UploadAsync($file, $meta, $folder, $overwrite)->wait();
+        return $this->base64UploadAsync($file, $fileName, $meta, $folder, $overwrite)->wait();
     }
 
     /**
      * @inheritDoc
      */
-    public function base64UploadAsync($file, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface
+    public function base64UploadAsync($file, ?string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface
     {
         $query = ['folder' => $folder];
 
@@ -111,14 +111,21 @@ class ApiClient extends BaseApiClient implements ApiClientContract
             $query['obfuscate'] = 'KEEP_ORIGINAL_NAME';
         }
 
+        $body = [
+            'postactions' => 'decode_base64',
+            'data'        => base64_encode(is_resource($file) ? Utils::tryGetContents($file) : Utils::tryGetContents(Utils::tryFopen($file, 'r'))),
+            'meta'        => $meta,
+        ];
+
+        if($fileName) {
+
+            $body['name'] = $fileName;
+        }
+
         return $this->postAsync(
             'files',
             [
-                'json' => [
-                    'postactions' => 'decode_base64',
-                    'data' => base64_encode(is_resource($file) ? Utils::tryGetContents($file) : Utils::tryGetContents(Utils::tryFopen($file, 'r'))),
-                    'meta' => $meta,
-                ],
+                'json'  => $body,
                 'query' => $query,
             ]
         )->then(fn (ResponseInterface $response) => FileDetails::make(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)));
