@@ -3,7 +3,9 @@
 namespace Drive\ScaleflexApiConnector\Contracts;
 
 use Drive\ScaleflexApiConnector\Models\FileDetails;
+use Drive\ScaleflexApiConnector\Models\FileSearchOptions;
 use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Support\Collection;
 use Psr\Http\Message\StreamInterface;
 
 interface ApiClientContract
@@ -79,4 +81,16 @@ interface ApiClientContract
      * @link https://developers.scaleflex.com/#75975094-04fa-402d-8125-ade2618881b9
      */
     public function base64UploadAsync($file, ?string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface;
+
+    /**
+     * @param  FileSearchOptions  $options
+     * @return Collection
+     */
+    public function search(FileSearchOptions $options): Collection;
+
+    /**
+     * @param  FileSearchOptions  $options
+     * @return PromiseInterface
+     */
+    public function searchAsync(FileSearchOptions $options): PromiseInterface;
 }
