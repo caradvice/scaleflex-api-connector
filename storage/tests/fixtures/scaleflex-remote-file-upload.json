@@ -21,10 +21,10 @@
             },
             "type": "image/jpeg",
             "url": {
-                "public": "https://store.filerobot.com/123/Test/test-image-7brqJR8K",
+                "public": "https://store.filerobot.com/123/test/test-image-7brqJR8K",
                 "permalink": "https://api.filerobot.com/123/v4/get/b7ace86b-5f83-5d0a-8367-e8962e750000",
-                "cdn": "https://123.filerobot.com/Test/test-image-7brqJR8K?vh=e51d78",
-                "path": "/Test/test-image-7brqJR8K"
+                "cdn": "https://123.filerobot.com/test/test-image-7brqJR8K?vh=e51d78",
+                "path": "/test/test-image-7brqJR8K"
             },
             "hash": {
                 "sha1": "e51d78e66eddd1fad4ad5308c9012bd193bf5f86",
@@ -35,7 +35,7 @@
             "overwrite": false,
             "folder": {
                 "uuid": "11481872-c424-5d92-b3c3-80721ddd5fec",
-                "name": "/Test/"
+                "name": "/test/"
             },
             "info": {
                 "img_type": "JPEG",

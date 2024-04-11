@@ -60,7 +60,7 @@ it(
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
-        $upload = $apiClient->fileUpload($file, ['test' => 123], '/Test');
+        $upload = $apiClient->fileUpload($file, null, ['test' => 123], '/test');
 
         expect($upload)
             ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
@@ -93,7 +93,7 @@ it(
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
-        $upload = $apiClient->fileUploadAsync($file, ['test' => 123], '/Test');
+        $upload = $apiClient->fileUploadAsync($file, null, ['test' => 123], '/test', true);
 
         expect($upload)
             ->toBeInstanceOf(\GuzzleHttp\Promise\PromiseInterface::class);
@@ -120,7 +120,7 @@ it(
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
-        $upload = $apiClient->remoteUpload($input['files_urls'], '/Test');
+        $upload = $apiClient->remoteUpload($input['files_urls'], '/test', true);
 
         expect($upload)
             ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
@@ -148,7 +148,7 @@ it(
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
-        $upload = $apiClient->remoteUploadAsync($input['files_urls'], '/Test');
+        $upload = $apiClient->remoteUploadAsync($input['files_urls'], '/test');
 
         expect($upload)
             ->toBeInstanceOf(\GuzzleHttp\Promise\PromiseInterface::class);
@@ -168,7 +168,7 @@ it(
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
-        $upload = $apiClient->base64Upload($file, 'sky', ['test' => 123], '/Test', true);
+        $upload = $apiClient->base64Upload($file, 'sky', ['test' => 123], '/test', true);
 
         expect($upload)
             ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)

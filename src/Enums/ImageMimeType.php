@@ -2,7 +2,7 @@
 
 namespace Drive\ScaleflexApiConnector\Enums;
 
-enum ImageMimeTypes: string
+enum ImageMimeType: string
 {
     case JPEG = 'image/jpeg';
     case PNG = 'image/png';

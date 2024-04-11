@@ -2,11 +2,13 @@
 
 namespace Drive\ScaleflexApiConnector\Models;
 
-use Drive\ScaleflexApiConnector\Enums\ImageMimeTypes;
+use Drive\ScaleflexApiConnector\Enums\ImageMimeType;
 use Drive\ScaleflexApiConnector\Enums\LanguageAbbreviation;
 use Drive\ScaleflexApiConnector\Enums\LogicalOperator;
-use Drive\ScaleflexApiConnector\Enums\Orientations;
-use Drive\ScaleflexApiConnector\Enums\Resolutions;
+use Drive\ScaleflexApiConnector\Enums\SortField;
+use Drive\ScaleflexApiConnector\Enums\Orientation;
+use Drive\ScaleflexApiConnector\Enums\Resolution;
+use Drive\ScaleflexApiConnector\Enums\SortOrder;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
 use ReflectionClass;
@@ -40,9 +42,14 @@ class FileSearchOptions implements Arrayable
     protected int $offset;
 
     /**
-     * @var array
+     * @var SortField
      */
-    protected array $sort;
+    protected SortField $sortField;
+
+    /**
+     * @var SortOrder
+     */
+    protected SortOrder $sortOrder = SortOrder::ASC;
 
     /**
      * @var array|string[]
@@ -65,19 +72,19 @@ class FileSearchOptions implements Arrayable
     protected LanguageAbbreviation $variant;
 
     /**
-     * @var ImageMimeTypes|array<ImageMimeTypes>
+     * @var ImageMimeType|ImageMimeType[]|string[]
      */
-    protected ImageMimeTypes|array $mimetypes;
+    protected ImageMimeType|array $mimetypes;
 
     /**
-     * @var Resolutions|array<Resolutions>
+     * @var Resolution|Resolution[]|string[]
      */
-    protected Resolutions|array $resolution;
+    protected Resolution|array $resolution;
 
     /**
-     * @var Orientations|array<Orientations>
+     * @var Orientation|Orientation[]|string[]
      */
-    protected Orientations|array $orientation;
+    protected Orientation|array $orientation;
 
     /**
      * @var int[]
@@ -139,8 +146,8 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  int  $maxFileSize Maximum file size in mega bytes
-     * @param  int  $minFileSize Minimum file size in mega bytes
+     * @param  int  $maxFileSize  Maximum file size in mega bytes
+     * @param  int  $minFileSize  Minimum file size in mega bytes
      * @return $this
      */
     public function fileSize(int $maxFileSize, int $minFileSize = 0): FileSearchOptions
@@ -155,55 +162,61 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @return Orientations
+     * @return Orientation|array
      */
-    public function getOrientation(): Orientations
+    public function getOrientation(): Orientation|array
     {
         return $this->orientation;
     }
 
     /**
-     * @param  Orientations|array<Orientations>  $orientation
+     * @param  Orientation|Orientation[]|string[]  $orientation
      * @return $this
      */
-    public function orientation(Orientations|array $orientation): FileSearchOptions
+    public function orientation(Orientation|array $orientation): FileSearchOptions
     {
+        !is_array($orientation) ?: $this->checkEnumArray($orientation, Orientation::class);
+
         $this->orientation = $orientation;
         return $this;
     }
 
     /**
-     * @return Resolutions
+     * @return Resolution|Resolution[]
      */
-    public function getResolution(): Resolutions
+    public function getResolution(): Resolution|array
     {
         return $this->resolution;
     }
 
     /**
-     * @param  Resolutions|array<Resolutions>  $resolution
+     * @param  Resolution|Resolution[]|string[]  $resolution
      * @return $this
      */
-    public function resolution(Resolutions|array $resolution): FileSearchOptions
+    public function resolution(Resolution|array $resolution): FileSearchOptions
     {
+        !is_array($resolution) ?: $this->checkEnumArray($resolution, Resolution::class);
+
         $this->resolution = $resolution;
         return $this;
     }
 
     /**
-     * @return ImageMimeTypes
+     * @return ImageMimeType|ImageMimeType[]
      */
-    public function getMimeTypes(): ImageMimeTypes
+    public function getMimeTypes(): ImageMimeType|array
     {
         return $this->mimetypes;
     }
 
     /**
-     * @param  ImageMimeTypes|array<ImageMimeTypes>  $mimeTypes
+     * @param  ImageMimeType|ImageMimeType[]|string[]  $mimeTypes
      * @return $this
      */
-    public function mimeTypes(ImageMimeTypes|array $mimeTypes): FileSearchOptions
+    public function mimeTypes(ImageMimeType|array $mimeTypes): FileSearchOptions
     {
+        !is_array($mimeTypes) ?: $this->checkEnumArray($mimeTypes, ImageMimeType::class);
+
         $this->mimetypes = $mimeTypes;
         return $this;
     }
@@ -217,11 +230,13 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  LanguageAbbreviation  $variant
+     * @param  LanguageAbbreviation|string  $variant
      * @return $this
      */
-    public function variant(LanguageAbbreviation $variant): FileSearchOptions
+    public function variant(LanguageAbbreviation|string $variant): FileSearchOptions
     {
+        $variant = is_string($variant) ? LanguageAbbreviation::from($variant) : $variant;
+
         $this->variant = $variant;
         return $this;
     }
@@ -253,11 +268,13 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  LogicalOperator  $labelsOperator
+     * @param  LogicalOperator|string  $labelsOperator
      * @return $this
      */
-    public function labelsOperator(LogicalOperator $labelsOperator): FileSearchOptions
+    public function labelsOperator(LogicalOperator|string $labelsOperator): FileSearchOptions
     {
+        $labelsOperator = is_string($labelsOperator) ? LogicalOperator::from(strtoupper($labelsOperator)) : $labelsOperator;
+
         $this->labelsOperator = $labelsOperator;
         return $this;
     }
@@ -281,20 +298,34 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @return array
+     * @return SortField
      */
-    public function getSort(): array
+    public function getSortField(): SortField
     {
-        return $this->sort;
+        return $this->sortField;
     }
 
     /**
-     * @param  array  $sort
+     * @return SortOrder
+     */
+    public function getSortOrder(): SortOrder
+    {
+        return $this->sortOrder;
+    }
+
+    /**
+     * @param  SortField|string  $field
+     * @param  SortOrder|string  $order
      * @return $this
      */
-    public function sort(array $sort): FileSearchOptions
+    public function sort(SortField|string $field, SortOrder|string $order = SortOrder::ASC): FileSearchOptions
     {
-        $this->sort = $sort;
+        $field = is_string($field) ? SortField::from($field) : $field;
+        $order = is_string($order) ? SortOrder::from($order) : $order;
+
+        $this->sortField = $field;
+        $this->sortOrder = $order;
+
         return $this;
     }
 
@@ -395,7 +426,7 @@ class FileSearchOptions implements Arrayable
     {
         $reflection = new ReflectionClass($this);
 
-        return collect($reflection->getProperties())->map(fn(ReflectionProperty $property) => [$property->getName() => $this->{$property->getName()} ?? null])->collapse()->toArray();
+        return collect($reflection->getProperties())->map(fn (ReflectionProperty $property) => [$property->getName() => $this->{$property->getName()} ?? null])->collapse()->toArray();
     }
 
     /**
@@ -408,19 +439,23 @@ class FileSearchOptions implements Arrayable
         $properties = [];
 
         foreach($class->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED) as $property) {
+
             $propertyName = $property->getName();
 
             if(isset($this->$propertyName)) {
 
                 $propertyValue = $this->$propertyName;
                 $parameterValueFunction = 'to' . strtoupper($propertyName) . 'ParameterValue';
-                $properties[$this->toParameterKey($propertyName)] = method_exists($this, $parameterValueFunction) ? $this->$parameterValueFunction($propertyValue) : $this->toParameterValue($propertyValue);
+                $parameterKeyFunction = 'to' . strtoupper($propertyName) . 'ParameterKey';
+                $properties[method_exists($this, $parameterKeyFunction) ? $this->$parameterKeyFunction($propertyName) : $this->toParameterKey($propertyName)] = method_exists($this, $parameterValueFunction) ? $this->$parameterValueFunction(
+                    $propertyValue
+                ) : $this->toParameterValue($propertyValue);
             }
         }
 
         $q = collect([$properties['meta'] ?? null, $properties['tags'] ?? null, $properties['fuzzySearch'] ?? null])->filter()->implode('+');
 
-        return collect(['q' => $q ?? null, ...$properties])->filter()->except(['fuzzy_search', 'meta', 'tag'])->toArray();
+        return collect(['q' => $q ?? null, ...$properties])->filter()->except(['fuzzy_search', 'meta', 'tag', 'sort_field', 'sort_order'])->toArray();
     }
 
     /**
@@ -464,6 +499,33 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
+     * @param  string  $key
+     * @return string
+     */
+    protected function toMetaParameterKey(string $key): string
+    {
+        return 'meta';
+    }
+
+    /**
+     * @param  string  $key
+     * @return string
+     */
+    protected function toSortFieldParameterKey(string $key): string
+    {
+        return 'sort';
+    }
+
+    /**
+     * @param  SortField  $sortField
+     * @return string
+     */
+    protected function toSortFieldParameterValue(SortField $sortField): string
+    {
+        return "{$sortField->value}:{$this->sortOrder->value}";
+    }
+
+    /**
      * @param $value
      * @return string
      */
@@ -500,7 +562,25 @@ class FileSearchOptions implements Arrayable
         return (string) Str::of($key)
             ->snake()
             ->singular()
-            ->lower()
-        ;
+            ->lower();
+    }
+
+    /**
+     * @param  array  $array
+     * @param  string  $enumClass
+     * @return void
+     */
+    protected function checkEnumArray(array $array, string $enumClass): void
+    {
+        foreach($array as $enum) {
+
+            if(is_string($enum)) {
+
+                $enumClass::tryFrom($enum) ?? throw new \InvalidArgumentException("\"{$enum}\" is not a valid image mime type");
+            } elseif(!$enum instanceof $enumClass) {
+
+                throw new \InvalidArgumentException("Invalid {$enumClass} provided");
+            }
+        }
     }
 }

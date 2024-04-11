@@ -26,21 +26,23 @@ interface ApiClientContract
 
     /**
      * @param  string|resource|StreamInterface  $file  File path or resource or stream
+     * @param  string|null  $fileName  Manually set file name or inherit uploaded file name if null
      * @param  array  $meta
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return FileDetails
      */
-    public function fileUpload($file, array $meta = [], string $folder = '/', bool $overwrite = false): FileDetails;
+    public function fileUpload($file, string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): FileDetails;
 
     /**
      * @param  string|resource|StreamInterface  $file  File path or resource or stream
+     * @param  string|null  $fileName  Manually set file name or inherit uploaded file name if null
      * @param  array  $meta
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return PromiseInterface
      */
-    public function fileUploadAsync($file, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface;
+    public function fileUploadAsync($file, string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface;
 
     /**
      * @param  list<array{url: string, name?: string, meta?: array}>  $files

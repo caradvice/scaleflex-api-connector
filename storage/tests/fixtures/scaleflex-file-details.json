@@ -39,10 +39,10 @@
             },
             "is_favorite": null,
             "url": {
-                "public": "https://store.filerobot.com/container/Test/e73048748fdcc151c2d5abfcb88f6d0b-mM3QWG9e.webp",
+                "public": "https://store.filerobot.com/container/test/e73048748fdcc151c2d5abfcb88f6d0b-mM3QWG9e.webp",
                 "permalink": "https://api.filerobot.com/container/v4/get/a02e2968-9378-59bb-85a1-fa56d8d50000",
-                "cdn": "https://container.filerobot.com/Test/e73048748fdcc151c2d5abfcb88f6d0b-mM3QWG9e.webp?vh=f7434c",
-                "path": "/Test/e73048748fdcc151c2d5abfcb88f6d0b-mM3QWG9e.webp"
+                "cdn": "https://container.filerobot.com/test/e73048748fdcc151c2d5abfcb88f6d0b-mM3QWG9e.webp?vh=f7434c",
+                "path": "/test/e73048748fdcc151c2d5abfcb88f6d0b-mM3QWG9e.webp"
             },
             "hash": {
                 "sha1": "f7434c71e71f000094ec512f1b6976fb247d0fae",
@@ -53,7 +53,7 @@
             "modified_at": "2024-04-04T02:40:27Z",
             "folder": {
                 "uuid": "11481872-c424-5d92-b3c3-80721ddd5fec",
-                "name": "/Test"
+                "name": "/test"
             },
             "product": {
                 "ref": null,

@@ -36,17 +36,28 @@ class ApiClient extends BaseApiClient implements ApiClientContract
      * @inheritDoc
      * @throws \JsonException
      */
-    public function fileUpload($file, array $meta = [], string $folder = '/', bool $overwrite = false): FileDetails
+    public function fileUpload($file, string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): FileDetails
     {
-        return $this->fileUploadAsync($file, $meta, $folder, $overwrite)->wait();
+        return $this->fileUploadAsync($file, $fileName, $meta, $folder, $overwrite)->wait();
     }
 
     /**
      * @inheritDoc
      */
-    public function fileUploadAsync($file, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface
+    public function fileUploadAsync($file, string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface
     {
         $query = ['folder' => $folder];
+        $body = [
+            [
+                'name'     => 'file',
+                'filename' => $fileName ?? null,
+                'contents' => is_resource($file) ? $file : Utils::tryFopen($file, 'r'),
+            ],
+            [
+                'name'     => 'meta',
+                'contents' => json_encode($meta, JSON_THROW_ON_ERROR),
+            ],
+        ];
 
         if($overwrite) {
 
@@ -56,16 +67,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
         return $this->postAsync(
             'files',
             [
-                'multipart' => [
-                    [
-                        'name'     => 'file',
-                        'contents' => is_resource($file) ? $file : Utils::tryFopen($file, 'r'),
-                    ],
-                    [
-                        'name'     => 'meta',
-                        'contents' => json_encode($meta, JSON_THROW_ON_ERROR),
-                    ],
-                ],
+                'multipart' => $body,
                 'query'     => $query,
             ]
         )->then(fn (ResponseInterface $response) => FileDetails::make(json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)));

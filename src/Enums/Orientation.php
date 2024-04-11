@@ -2,7 +2,7 @@
 
 namespace Drive\ScaleflexApiConnector\Enums;
 
-enum Orientations: string
+enum Orientation: string
 {
     case PA = 'PA'; // Panorama image
     case PO = 'PO'; // Portrait image

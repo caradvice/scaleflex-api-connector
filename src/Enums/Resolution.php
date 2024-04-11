@@ -2,7 +2,7 @@
 
 namespace Drive\ScaleflexApiConnector\Enums;
 
-enum Resolutions: string
+enum Resolution: string
 {
     case SMALL = 'small';
     case MEDIUM = 'medium';
