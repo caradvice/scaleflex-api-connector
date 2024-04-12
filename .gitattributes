@@ -14,3 +14,5 @@
 .gitignore export-ignore
 CHANGELOG.md export-ignore
 phpunit.xml export-ignore
+phpstan.neon export-ignore
+install-git-hooks.sh export-ignore

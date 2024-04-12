@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+function __run() #(step, name, cmd)
+{
+    local output exitcode
+
+    printf "[%s] %-20s" "$1" "$2"
+    output=$(eval "$3" 2>&1)
+    exitcode=$?
+
+    if [[ 0 == "$exitcode" || 130 == "$exitcode" ]]; then
+        echo -e "OK!"
+    else
+        echo -e "Not OK!\n\n$output"
+        exit 1
+    fi
+}
+
+modified="git diff --diff-filter=M --name-only --cached  | grep \".php$\""
+
+__run "1/2" "Lint (w/ pint)" "${modified} | xargs -r vendor/bin/pint"
+__run "2/2" "PHPStan" "${modified} | xargs -r vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=4G"
