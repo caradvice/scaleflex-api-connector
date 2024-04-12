@@ -154,8 +154,8 @@ class ApiClient extends BaseApiClient implements ApiClientContract
             ->then(
                 function (ResponseInterface $search) {
 
-                    $results = collect(json_decode($search->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
-                    $results->put('files', collect($results->get('files', collect()))->mapInto(SearchResultFileDetails::class));
+                    $results = new Collection(json_decode($search->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR));
+                    $results->put('files', (new Collection($results->get('files', collect())))->mapInto(SearchResultFileDetails::class));
 
                     return $results;
                 }

@@ -41,32 +41,32 @@ class FileDetails extends DataTransferObject
      * @var string[]
      */
     protected $map = [
-        'file.uuid' => 'uuid',
-        'file.name' => 'name',
-        'file.info.img_type' => 'format',
+        'file.uuid'                 => 'uuid',
+        'file.name'                 => 'name',
+        'file.info.img_type'        => 'format',
         'file.info.img_color_space' => 'colourSpace',
-        'file.info.img_w' => 'width',
-        'file.info.img_h' => 'height',
-        'file.info.area' => 'area',
-        'file.info.img_o' => 'orientation',
-        'file.type' => 'mimeType',
-        'file.size.bytes' => 'sizeInBytes',
-        'file.url.public' => 'publicUrl',
-        'file.url.permalink' => 'permalinkUrl',
-        'file.url.cdn' => 'cdnUrl',
-        'file.info.thumbnail' => 'thumbnailUrl',
-        'file.info.thumbnail_uuid' => 'thumbnailUuid',
-        'file.url.path' => 'path',
-        'file.hash.sha1' => 'sha1Hash',
-        'file.folder.uuid' => 'folderUuid',
-        'file.folder.name' => 'folderPath',
-        'file.is_favorite' => 'isFavorite',
-        'file.created_at' => 'createdAt',
-        'file.modified_at' => 'modifiedAt',
-        'file.meta' => 'meta',
-        'file.tags' => 'tags',
-        'file.labels' => 'labels',
-        'file.visibility' => 'visibility',
+        'file.info.img_w'           => 'width',
+        'file.info.img_h'           => 'height',
+        'file.info.area'            => 'area',
+        'file.info.img_o'           => 'orientation',
+        'file.type'                 => 'mimeType',
+        'file.size.bytes'           => 'sizeInBytes',
+        'file.url.public'           => 'publicUrl',
+        'file.url.permalink'        => 'permalinkUrl',
+        'file.url.cdn'              => 'cdnUrl',
+        'file.info.thumbnail'       => 'thumbnailUrl',
+        'file.info.thumbnail_uuid'  => 'thumbnailUuid',
+        'file.url.path'             => 'path',
+        'file.hash.sha1'            => 'sha1Hash',
+        'file.folder.uuid'          => 'folderUuid',
+        'file.folder.name'          => 'folderPath',
+        'file.is_favorite'          => 'isFavorite',
+        'file.created_at'           => 'createdAt',
+        'file.modified_at'          => 'modifiedAt',
+        'file.meta'                 => 'meta',
+        'file.tags'                 => 'tags',
+        'file.labels'               => 'labels',
+        'file.visibility'           => 'visibility',
     ];
 
     /**
@@ -200,73 +200,73 @@ class FileDetails extends DataTransferObject
     public ?CarbonImmutable $modifiedAt = null;
 
     /**
-     * @param $value
+     * @param  string  $value
      * @return string
      */
-    protected function castFormat($value): string
+    protected function castFormat(string $value): string
     {
         return Str::lower($value);
     }
 
     /**
-     * @param $value
+     * @param  array<string, string|int>  $value
      * @return Collection
      */
-    protected function castMeta($value): Collection
+    protected function castMeta(?array $value): Collection
     {
         return new Collection($value);
     }
 
     /**
-     * @param $value
+     * @param  string[]  $value
      * @return Collection
      */
-    protected function castTags($value): Collection
+    protected function castTags(?array $value): Collection
     {
         return new Collection($value);
     }
 
     /**
-     * @param $value
+     * @param  string[]  $value
      * @return Collection
      */
-    protected function castLabels($value): Collection
+    protected function castLabels(?array $value): Collection
     {
         return new Collection($value);
     }
 
     /**
-     * @param $value
+     * @param  array<string, string>  $value
      * @return Collection
      */
-    protected function castVisibility($value): Collection
+    protected function castVisibility(?array $value): Collection
     {
         return new Collection($value);
     }
 
     /**
-     * @param $value
+     * @param  array<string, string|int>  $value
      * @return Collection
      */
-    protected function castInfo($value): Collection
+    protected function castInfo(?array $value): Collection
     {
         return new Collection($value);
     }
 
     /**
-     * @param $value
+     * @param  string  $value
      * @return CarbonImmutable
      */
-    protected function castCreatedAt($value): CarbonImmutable
+    protected function castCreatedAt(string $value): CarbonImmutable
     {
         return CarbonImmutable::parse($value);
     }
 
     /**
-     * @param $value
+     * @param  string  $value
      * @return CarbonImmutable
      */
-    protected function castModifiedAt($value): CarbonImmutable
+    protected function castModifiedAt(string $value): CarbonImmutable
     {
         return CarbonImmutable::parse($value);
     }

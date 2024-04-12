@@ -89,7 +89,7 @@ it(
         $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
         $baseApiClient->shouldReceive('requestAsync')
             ->once()
-            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response))));
+            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response, JSON_THROW_ON_ERROR))));
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
@@ -116,7 +116,7 @@ it(
         $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
         $baseApiClient->shouldReceive('requestAsync')
             ->once()
-            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response))));
+            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response, JSON_THROW_ON_ERROR))));
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
@@ -144,7 +144,7 @@ it(
         $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
         $baseApiClient->shouldReceive('requestAsync')
             ->once()
-            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response))));
+            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response, JSON_THROW_ON_ERROR))));
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
@@ -164,7 +164,7 @@ it(
         $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
         $baseApiClient->shouldReceive('requestAsync')
             ->once()
-            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response))));
+            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response, JSON_THROW_ON_ERROR))));
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
@@ -187,3 +187,39 @@ it(
         'stream'   => \GuzzleHttp\Psr7\Utils::streamFor(__DIR__ . '/../../storage/tests/sky.jpeg'),
     ]
 );
+
+it('searches files synchronously', function () {
+
+    $response = loadFixture('scaleflex-file-search', 'response');
+
+    $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
+    $baseApiClient->shouldReceive('getAsync')
+        ->once()
+        ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response, JSON_THROW_ON_ERROR))));
+
+    /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
+    $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
+
+    $searchOptions = new \Drive\ScaleflexApiConnector\Models\FileSearchOptions('sky', '/test', false);
+    $search = $apiClient->search($searchOptions);
+
+    expect($search)
+        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
+        ->and($search->get('status'))
+        ->toBeString()
+        ->toEqual('success')
+        ->and($search->get('files'))
+        ->toBeInstanceOf(\Illuminate\Support\Collection::class)
+        ->toHaveLength(1)
+        ->and($search->get('files', collect())->first())
+        ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
+        ->and($search->get('files', collect())->first()->uuid)
+        ->toBeString()
+        ->toEqual($response['files'][0]['uuid'])
+        ->and($search->get('files', collect())->first()->name)
+        ->toBeString()
+        ->toEqual($response['files'][0]['name'])
+        ->and($search->get('files', collect())->first()->createdAt)
+        ->toBeInstanceOf(\Carbon\CarbonImmutable::class)
+    ;
+});

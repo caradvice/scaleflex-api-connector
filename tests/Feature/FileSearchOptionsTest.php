@@ -10,7 +10,7 @@ it(
             ->meta(['foo' => 'bar', 'baz' => 'qux'])
             ->tags(['tag1', 'tag2'])
             ->labels(['label1', 'label2', 'label3'])
-            ->labelsOperator('and')
+            ->labelsOperator('AND')
             ->limit(10)
             ->offset(20)
             ->sort('uploaded_at', 'desc')
@@ -20,8 +20,7 @@ it(
             ->resolution(['small', 'medium'])
             ->orientation(['LD', 'PO'])
             ->fileSize(10)
-            ->format(['select' => 'human', 'labels' => 'json_full', 'tags' => 'json_full'])
-        ;
+            ->format(['select' => 'human', 'labels' => 'json_full', 'tags' => 'json_full']);
 
         expect($searchOptions)
             ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileSearchOptions::class)
@@ -77,8 +76,7 @@ it(
             ->and($searchOptions->getFormat())
             ->toBeArray()
             ->toHaveKeys(['select', 'labels', 'tags'])
-            ->toContain('human', 'json_full')
-        ;
+            ->toContain('human', 'json_full');
     }
 );
 
@@ -211,7 +209,7 @@ it('can convert search options into an array', function () {
         )
         ->not->toHaveKeys(
             [
-                'q'
+                'q',
             ]
         )
         ->and($params['fuzzySearch'])
@@ -249,8 +247,7 @@ it('can convert search options into an array', function () {
         ->toContainEqual('small', 'medium')
         ->and($params['orientation'])
         ->toBeArray()
-        ->toContainEqual('LD', 'PO')
-    ;
+        ->toContainEqual('LD', 'PO');
 });
 
 it('throws an exception when giving an invalid file size range', function () {

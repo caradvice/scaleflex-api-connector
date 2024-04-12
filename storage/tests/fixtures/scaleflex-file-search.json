@@ -1,0 +1,136 @@
+{
+    "response": {
+        "status": "success",
+        "type": "LIST",
+        "base": {
+            "uuid": "e6695119-7821-5481-b389-cde0f27ad86e",
+            "path": "/test",
+            "name": "test",
+            "meta": null,
+            "visibility": {
+                "value": "VISIBILITY_INHERIT",
+                "inherited": "VISIBILITY_ORGANISATION",
+                "set": "VISIBILITY_INHERIT",
+                "actual": "VISIBILITY_ORGANISATION"
+            },
+            "visibilities": {
+                "value": "VISIBILITY_INHERIT",
+                "inherited": "VISIBILITY_ORGANISATION",
+                "set": "VISIBILITY_INHERIT",
+                "actual": "VISIBILITY_ORGANISATION"
+            },
+            "updated_at": "2024-04-12T07:35:18",
+            "created_at": "2024-04-12T07:35:18",
+            "count": {
+                "files_recursive": 1,
+                "files_direct": 1
+            },
+            "size": {
+                "total_recursive_bytes": 4372,
+                "total_recursive_pretty": "4.27 KB"
+            },
+            "public_icon": "https://scaleflex.cloudimg.io/crop/300x300/x/http://www.airstore.io/assets/dir.png"
+        },
+        "files": [
+            {
+                "uuid": "8e2e85a8-f2ba-5c9d-a12f-7247b7f50000",
+                "name": "sky-U0wznLpH.webp",
+                "extension": "webp",
+                "size": {
+                    "bytes": 4372,
+                    "pretty": "4.27 KB"
+                },
+                "flags": null,
+                "type": "image/webp",
+                "info": {
+                    "area": 60000,
+                    "ext": "webp",
+                    "face_count": 0,
+                    "img_color_space": "RGB",
+                    "img_h": 300,
+                    "img_o": "PO",
+                    "img_type": "WEBP",
+                    "img_w": 200,
+                    "metadata": {
+                        "X": 200,
+                        "Y": 300,
+                        "exif:ColorSpace": 65535,
+                        "exif:ComponentsConfiguration": 1,
+                        "exif:ComponentsConfiguration[2]": 2,
+                        "exif:ComponentsConfiguration[3]": 3,
+                        "exif:ComponentsConfiguration[4]": 0,
+                        "exif:ExifVersion": 210,
+                        "exif:FlashpixVersion": 100,
+                        "exif:PixelXDimension": 200,
+                        "exif:PixelYDimension": 300,
+                        "exif:UserComment": "Picsum ID: 741",
+                        "exif:UserComment/?xml:lang": "x-default",
+                        "resolution_unit": "DPI",
+                        "tiff:Orientation": 1,
+                        "tiff:ResolutionUnit": 2,
+                        "tiff:XResolution": "72/1",
+                        "tiff:YCbCrPositioning": 1,
+                        "tiff:YResolution": "72/1",
+                        "x_resolution": 72,
+                        "y_resolution": 72
+                    },
+                    "name": "sky.jpeg",
+                    "thumbnail": "https://test.filerobot.com/.internal/thumbnails/8e2e85a8-f2ba-5c9d-a12f-7247b7f50000.jpg?vh=437b95",
+                    "thumbnail_uuid": "ef0da902-a743-5c94-9f5a-7b8cae850000",
+                    "type": "image/jpeg"
+                },
+                "meta": {
+                    "foo": "bar"
+                },
+                "tags": {},
+                "labels": null,
+                "relevance": 1,
+                "visibility": {
+                    "value": "VISIBILITY_INHERIT",
+                    "inherited": "VISIBILITY_ORGANISATION",
+                    "set": "VISIBILITY_INHERIT",
+                    "actual": "VISIBILITY_ORGANISATION"
+                },
+                "is_favorite": null,
+                "url": {
+                    "public": "https://store.filerobot.com/test/test/sky-U0wznLpH.webp",
+                    "permalink": "https://api.filerobot.com/test/v4/get/8e2e85a8-f2ba-5c9d-a12f-7247b7f50000",
+                    "cdn": "https://test.filerobot.com/test/sky-U0wznLpH.webp?vh=437b95",
+                    "path": "/test/sky-U0wznLpH.webp"
+                },
+                "hash": {
+                    "sha1": "437b959d1244dc940334f585039a739c82e551d4",
+                    "blurhash": null
+                },
+                "iptc_xml": {},
+                "created_at": "2024-04-12T07:35:50Z",
+                "modified_at": "2024-04-12T07:35:57Z",
+                "folder": {
+                    "uuid": "e6695119-7821-5481-b389-cde0f27ad86e",
+                    "name": "/test"
+                }
+            }
+        ],
+        "folders": [],
+        "warnings": [],
+        "stats": {
+            "approx_files_count": 1,
+            "approx_files_size": 4372,
+            "approx_files_count_method": "COUNT_EXACT"
+        },
+        "info": {
+            "atom": "atom309",
+            "response_time": {
+                "db_conn": 0,
+                "db_query": 625,
+                "db_query_core": 3,
+                "parse": 0
+            }
+        },
+        "api_version": {
+            "hash": "891f61e073d39820592a7bcb0a9222564908d0c4",
+            "datetime": "2024-04-12T04:12:01+00:00",
+            "module": "elastic_v2"
+        }
+    }
+}

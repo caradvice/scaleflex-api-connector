@@ -5,9 +5,9 @@ namespace Drive\ScaleflexApiConnector\Models;
 use Drive\ScaleflexApiConnector\Enums\ImageMimeType;
 use Drive\ScaleflexApiConnector\Enums\LanguageAbbreviation;
 use Drive\ScaleflexApiConnector\Enums\LogicalOperator;
-use Drive\ScaleflexApiConnector\Enums\SortField;
 use Drive\ScaleflexApiConnector\Enums\Orientation;
 use Drive\ScaleflexApiConnector\Enums\Resolution;
+use Drive\ScaleflexApiConnector\Enums\SortField;
 use Drive\ScaleflexApiConnector\Enums\SortOrder;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Str;
@@ -22,7 +22,7 @@ class FileSearchOptions implements Arrayable
     protected string $fuzzySearch;
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     protected array $meta;
 
@@ -52,7 +52,7 @@ class FileSearchOptions implements Arrayable
     protected SortOrder $sortOrder = SortOrder::ASC;
 
     /**
-     * @var array|string[]
+     * @var array<string, string>
      */
     protected array $format = ['select' => 'human', 'labels' => 'json_full', 'tags' => 'json_full'];
 
@@ -62,7 +62,7 @@ class FileSearchOptions implements Arrayable
     protected LogicalOperator $labelsOperator;
 
     /**
-     * @var array
+     * @var string[]
      */
     protected array $labels;
 
@@ -72,17 +72,17 @@ class FileSearchOptions implements Arrayable
     protected LanguageAbbreviation $variant;
 
     /**
-     * @var ImageMimeType|ImageMimeType[]|string[]
+     * @var ImageMimeType|ImageMimeType[]|array{key-of<ImageMimeType>|value-of<ImageMimeType>}
      */
     protected ImageMimeType|array $mimetypes;
 
     /**
-     * @var Resolution|Resolution[]|string[]
+     * @var Resolution|Resolution[]|array{key-of<Resolution>|value-of<Resolution>}
      */
     protected Resolution|array $resolution;
 
     /**
-     * @var Orientation|Orientation[]|string[]
+     * @var Orientation|Orientation[]|array{key-of<Orientation>|value-of<Orientation>}
      */
     protected Orientation|array $orientation;
 
@@ -92,7 +92,7 @@ class FileSearchOptions implements Arrayable
     protected array $size;
 
     /**
-     * @var array
+     * @var string[]
      */
     protected array $tags;
 
@@ -100,6 +100,18 @@ class FileSearchOptions implements Arrayable
      * @var string
      */
     protected string $folder;
+
+    /**
+     * @param  string|null  $fuzzySearch
+     * @param  string|null  $folder
+     * @param  bool  $recursive
+     */
+    public function __construct(string $fuzzySearch = null, string $folder = null, bool $recursive = true)
+    {
+        $fuzzySearch ? $this->fuzzySearch($fuzzySearch) : null;
+        $folder ? $this->folder($folder) : null;
+        $this->recursive($recursive);
+    }
 
     /**
      * @return string
@@ -120,7 +132,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getTags(): array
     {
@@ -128,7 +140,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  array  $tags
+     * @param  string[]  $tags
      * @return $this
      */
     public function tags(array $tags): FileSearchOptions
@@ -162,7 +174,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @return Orientation|array
+     * @return Orientation|Orientation[]|array{value-of<Orientation>}
      */
     public function getOrientation(): Orientation|array
     {
@@ -170,7 +182,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  Orientation|Orientation[]|string[]  $orientation
+     * @param  Orientation|Orientation[]|array{key-of<Orientation>|value-of<Orientation>}  $orientation
      * @return $this
      */
     public function orientation(Orientation|array $orientation): FileSearchOptions
@@ -182,7 +194,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @return Resolution|Resolution[]
+     * @return Resolution|Resolution[]|array{key-of<Resolution>|value-of<Resolution>}
      */
     public function getResolution(): Resolution|array
     {
@@ -190,7 +202,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  Resolution|Resolution[]|string[]  $resolution
+     * @param  Resolution|Resolution[]|array{key-of<Resolution>|value-of<Resolution>}  $resolution
      * @return $this
      */
     public function resolution(Resolution|array $resolution): FileSearchOptions
@@ -202,7 +214,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @return ImageMimeType|ImageMimeType[]
+     * @return ImageMimeType|ImageMimeType[]|array{key-of<ImageMimeType>|value-of<ImageMimeType>}
      */
     public function getMimeTypes(): ImageMimeType|array
     {
@@ -210,7 +222,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  ImageMimeType|ImageMimeType[]|string[]  $mimeTypes
+     * @param  ImageMimeType|ImageMimeType[]|array{key-of<ImageMimeType>|value-of<ImageMimeType>}  $mimeTypes
      * @return $this
      */
     public function mimeTypes(ImageMimeType|array $mimeTypes): FileSearchOptions
@@ -230,7 +242,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  LanguageAbbreviation|string  $variant
+     * @param  LanguageAbbreviation|value-of<LanguageAbbreviation>  $variant
      * @return $this
      */
     public function variant(LanguageAbbreviation|string $variant): FileSearchOptions
@@ -242,7 +254,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getLabels(): array
     {
@@ -250,7 +262,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  array  $labels
+     * @param  string[]  $labels
      * @return $this
      */
     public function labels(array $labels): FileSearchOptions
@@ -268,7 +280,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  LogicalOperator|string  $labelsOperator
+     * @param  LogicalOperator|value-of<LogicalOperator>  $labelsOperator
      * @return $this
      */
     public function labelsOperator(LogicalOperator|string $labelsOperator): FileSearchOptions
@@ -280,7 +292,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @return array|string[]
+     * @return array<string, string>
      */
     public function getFormat(): array
     {
@@ -288,7 +300,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  array  $format
+     * @param  array<string, string>  $format
      * @return $this
      */
     public function format(array $format): FileSearchOptions
@@ -314,8 +326,8 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  SortField|string  $field
-     * @param  SortOrder|string  $order
+     * @param  SortField|value-of<SortField>  $field
+     * @param  SortOrder|value-of<SortOrder>  $order
      * @return $this
      */
     public function sort(SortField|string $field, SortOrder|string $order = SortOrder::ASC): FileSearchOptions
@@ -402,7 +414,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     public function getMeta(): array
     {
@@ -410,7 +422,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  array  $meta
+     * @param  array<string, string>  $meta
      * @return $this
      */
     public function meta(array $meta): FileSearchOptions
@@ -420,7 +432,25 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<int, mixed>|array{
+     *     fuzzySearch: string,
+     *     meta: array<string, string>,
+     *     recursive: bool,
+     *     limit: int,
+     *     offset: int,
+     *     sortField: SortField,
+     *     sortOrder: SortOrder,
+     *     format: array<string, string>,
+     *     labelsOperator: LogicalOperator,
+     *     labels: string[],
+     *     variant: LanguageAbbreviation,
+     *     mimetypes: ImageMimeType|ImageMimeType[]|array{value-of<ImageMimeType>},
+     *     resolution: Resolution|Resolution[]|array{value-of<Resolution>},
+     *     orientation: Orientation|Orientation[]|array{value-of<Orientation>},
+     *     size: int[],
+     *     tags: string[],
+     *     folder: string,
+     * }
      */
     public function toArray(): array
     {
@@ -430,7 +460,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      * @throws \ReflectionException
      */
     public function toParameterArray(): array
@@ -455,7 +485,7 @@ class FileSearchOptions implements Arrayable
 
         $q = collect([$properties['meta'] ?? null, $properties['tags'] ?? null, $properties['fuzzySearch'] ?? null])->filter()->implode('+');
 
-        return collect(['q' => $q ?? null, ...$properties])->filter()->except(['fuzzy_search', 'meta', 'tag', 'sort_field', 'sort_order'])->toArray();
+        return collect(['q' => filled($q) ? $q : null, ...$properties])->filter()->except(['fuzzy_search', 'meta', 'tag', 'sort_field', 'sort_order'])->toArray();
     }
 
     /**
@@ -468,7 +498,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  array  $meta
+     * @param  array<string, string>  $meta
      * @return string
      */
     protected function toMetaParameterValue(array $meta): string
@@ -479,7 +509,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  array  $tags
+     * @param  string[]  $tags
      * @return string
      */
     protected function toTagsParameterValue(array $tags): string
@@ -490,7 +520,7 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  array  $fileSize
+     * @param  int[]  $fileSize
      * @return string
      */
     protected function toSizeParameterValue(array $fileSize): string
@@ -526,10 +556,10 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param $value
+     * @param  \BackedEnum|string|array<int, mixed>|array<string|int, mixed>  $value
      * @return string
      */
-    protected function toParameterValue($value): string
+    protected function toParameterValue(\BackedEnum|array|string $value): string
     {
         if(is_array($value)) {
 
@@ -540,17 +570,17 @@ class FileSearchOptions implements Arrayable
                 $separator = ',';
             } else {
 
-                array_walk($value, fn (&$item, $key) => $item = $key . ':' . $this->toParameterValue($item));
+                array_walk($value, fn (&$item, string|int $key) => $item = $key . ':' . $this->toParameterValue($item));
                 $separator = '+';
             }
 
             $value = implode($separator, $value);
-        } elseif($value instanceof \UnitEnum) {
+        } elseif($value instanceof \BackedEnum) {
 
             $value = $value->value;
         }
 
-        return $value;
+        return (string) $value;
     }
 
     /**
@@ -566,8 +596,8 @@ class FileSearchOptions implements Arrayable
     }
 
     /**
-     * @param  array  $array
-     * @param  string  $enumClass
+     * @param  array<int, string|\BackedEnum>  $array
+     * @param  class-string  $enumClass
      * @return void
      */
     protected function checkEnumArray(array $array, string $enumClass): void

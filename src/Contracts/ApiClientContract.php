@@ -27,7 +27,7 @@ interface ApiClientContract
     /**
      * @param  string|resource|StreamInterface  $file  File path or resource or stream
      * @param  string|null  $fileName  Manually set file name or inherit uploaded file name if null
-     * @param  array  $meta
+     * @param  array<string, string>  $meta
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return FileDetails
@@ -37,7 +37,7 @@ interface ApiClientContract
     /**
      * @param  string|resource|StreamInterface  $file  File path or resource or stream
      * @param  string|null  $fileName  Manually set file name or inherit uploaded file name if null
-     * @param  array  $meta
+     * @param  array<string, string>  $meta
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return PromiseInterface
@@ -45,7 +45,7 @@ interface ApiClientContract
     public function fileUploadAsync($file, string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface;
 
     /**
-     * @param  list<array{url: string, name?: string, meta?: array}>  $files
+     * @param  array{int, array{url: string, name?: string, meta?: array<string, string>}}  $files
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return FileDetails
@@ -54,7 +54,7 @@ interface ApiClientContract
     public function remoteUpload(array $files, string $folder = '/', bool $overwrite = false): FileDetails;
 
     /**
-     * @param  list<array{url: string, name?: string, meta?: array}>  $files
+     * @param  array{int, array{url: string, name?: string, meta?: array<string, string>}}  $files
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return PromiseInterface
@@ -65,7 +65,7 @@ interface ApiClientContract
     /**
      * @param  string|resource|StreamInterface  $file  File path or resource or stream
      * @param  string|null  $fileName
-     * @param  array  $meta
+     * @param  array<string, string>  $meta
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return FileDetails
@@ -76,7 +76,7 @@ interface ApiClientContract
     /**
      * @param  string|resource|StreamInterface  $file  File path or resource or stream
      * @param  string|null  $fileName
-     * @param  array  $meta
+     * @param  array<string, string>  $meta
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return PromiseInterface
