@@ -5,7 +5,8 @@
                 "url": "https://picsum.photos/536/354",
                 "name": "test-image",
                 "meta": {
-                    "foo": "bar"
+                    "foo": "bar",
+                    "tagging": ["tag1", "tag2", "tag3"]
                 }
             }
         ]

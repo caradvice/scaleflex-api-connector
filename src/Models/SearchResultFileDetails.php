@@ -62,7 +62,7 @@ class SearchResultFileDetails extends FileDetails
         'created_at' => 'createdAt',
         'modified_at' => 'modifiedAt',
         'meta' => 'meta',
-        'tags' => 'tags',
+        'meta.tagging' => 'tags',
         'labels' => 'labels',
         'visibility' => 'visibility',
     ];

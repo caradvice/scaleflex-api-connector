@@ -64,7 +64,7 @@ class FileDetails extends DataTransferObject
         'file.created_at'           => 'createdAt',
         'file.modified_at'          => 'modifiedAt',
         'file.meta'                 => 'meta',
-        'file.tags'                 => 'tags',
+        'file.meta.tagging'         => 'tags',
         'file.labels'               => 'labels',
         'file.visibility'           => 'visibility',
     ];
@@ -214,7 +214,7 @@ class FileDetails extends DataTransferObject
      */
     protected function castMeta(?array $value): Collection
     {
-        return new Collection($value);
+        return (new Collection($value))->forget('tagging');
     }
 
     /**

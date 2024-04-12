@@ -36,15 +36,15 @@ class ApiClient extends BaseApiClient implements ApiClientContract
      * @inheritDoc
      * @throws \JsonException
      */
-    public function fileUpload($file, string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): FileDetails
+    public function fileUpload($file, string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): FileDetails
     {
-        return $this->fileUploadAsync($file, $fileName, $meta, $folder, $overwrite)->wait();
+        return $this->fileUploadAsync($file, $fileName, $meta, $tags, $folder, $overwrite)->wait();
     }
 
     /**
      * @inheritDoc
      */
-    public function fileUploadAsync($file, string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface
+    public function fileUploadAsync($file, string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): PromiseInterface
     {
         $query = ['folder' => $folder];
         $body = [
@@ -55,7 +55,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
             ],
             [
                 'name'     => 'meta',
-                'contents' => json_encode($meta, JSON_THROW_ON_ERROR),
+                'contents' => json_encode(array_merge($meta, ['tagging' => $tags]), JSON_THROW_ON_ERROR),
             ],
         ];
 
@@ -100,15 +100,15 @@ class ApiClient extends BaseApiClient implements ApiClientContract
     /**
      * @inheritDoc
      */
-    public function base64Upload($file, ?string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): FileDetails
+    public function base64Upload($file, ?string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): FileDetails
     {
-        return $this->base64UploadAsync($file, $fileName, $meta, $folder, $overwrite)->wait();
+        return $this->base64UploadAsync($file, $fileName, $meta, $tags, $folder, $overwrite)->wait();
     }
 
     /**
      * @inheritDoc
      */
-    public function base64UploadAsync($file, ?string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface
+    public function base64UploadAsync($file, ?string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): PromiseInterface
     {
         $query = ['folder' => $folder];
 
@@ -120,7 +120,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
         $body = [
             'postactions' => 'decode_base64',
             'data'        => base64_encode(is_resource($file) ? Utils::tryGetContents($file) : Utils::tryGetContents(Utils::tryFopen($file, 'r'))),
-            'meta'        => $meta,
+            'meta'        => array_merge($meta, ['tagging' => $tags]),
         ];
 
         if($fileName) {

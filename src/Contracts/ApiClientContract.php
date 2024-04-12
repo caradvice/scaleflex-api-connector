@@ -28,21 +28,23 @@ interface ApiClientContract
      * @param  string|resource|StreamInterface  $file  File path or resource or stream
      * @param  string|null  $fileName  Manually set file name or inherit uploaded file name if null
      * @param  array<string, string>  $meta
+     * @param  string[]  $tags
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return FileDetails
      */
-    public function fileUpload($file, string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): FileDetails;
+    public function fileUpload($file, string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): FileDetails;
 
     /**
      * @param  string|resource|StreamInterface  $file  File path or resource or stream
      * @param  string|null  $fileName  Manually set file name or inherit uploaded file name if null
      * @param  array<string, string>  $meta
+     * @param  string[]  $tags
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return PromiseInterface
      */
-    public function fileUploadAsync($file, string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface;
+    public function fileUploadAsync($file, string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): PromiseInterface;
 
     /**
      * @param  array{int, array{url: string, name?: string, meta?: array<string, string>}}  $files
@@ -66,23 +68,25 @@ interface ApiClientContract
      * @param  string|resource|StreamInterface  $file  File path or resource or stream
      * @param  string|null  $fileName
      * @param  array<string, string>  $meta
+     * @param  string[]  $tags
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return FileDetails
      * @link https://developers.scaleflex.com/#75975094-04fa-402d-8125-ade2618881b9
      */
-    public function base64Upload($file, ?string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): FileDetails;
+    public function base64Upload($file, ?string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): FileDetails;
 
     /**
      * @param  string|resource|StreamInterface  $file  File path or resource or stream
      * @param  string|null  $fileName
      * @param  array<string, string>  $meta
+     * @param  string[]  $tags
      * @param  string  $folder
      * @param  bool  $overwrite  Overwrite file a destination if it already exists
      * @return PromiseInterface
      * @link https://developers.scaleflex.com/#75975094-04fa-402d-8125-ade2618881b9
      */
-    public function base64UploadAsync($file, ?string $fileName = null, array $meta = [], string $folder = '/', bool $overwrite = false): PromiseInterface;
+    public function base64UploadAsync($file, ?string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): PromiseInterface;
 
     /**
      * @param  FileSearchOptions  $options

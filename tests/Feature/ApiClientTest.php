@@ -60,7 +60,7 @@ it(
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
-        $upload = $apiClient->fileUpload($file, null, ['test' => 123], '/test');
+        $upload = $apiClient->fileUpload($file, null, ['test' => 123], ['tag1', 'tag2', 'tag3'], '/test');
 
         expect($upload)
             ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
@@ -93,7 +93,7 @@ it(
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
-        $upload = $apiClient->fileUploadAsync($file, null, ['test' => 123], '/test', true);
+        $upload = $apiClient->fileUploadAsync($file, null, ['test' => 123], ['tag1', 'tag2', 'tag3'], '/test', true);
 
         expect($upload)
             ->toBeInstanceOf(\GuzzleHttp\Promise\PromiseInterface::class);
@@ -168,7 +168,7 @@ it(
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
-        $upload = $apiClient->base64Upload($file, 'sky', ['test' => 123], '/test', true);
+        $upload = $apiClient->base64Upload($file, 'sky', ['test' => 123], ['tag1', 'tag2', 'tag3'], '/test', true);
 
         expect($upload)
             ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
