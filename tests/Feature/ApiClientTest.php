@@ -223,3 +223,95 @@ it('searches files synchronously', function () {
         ->toBeInstanceOf(\Carbon\CarbonImmutable::class)
     ;
 });
+
+it(
+    'updates metadata fields synchronously',
+    function () {
+
+        $response = loadFixture('scaleflex-file-meta-update', 'response');
+
+        $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
+        $baseApiClient->shouldReceive('requestAsync')
+            ->once()
+            ->withArgs(function (string $method) {
+                return $method === 'PATCH';
+            })
+            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(
+                new \GuzzleHttp\Psr7\Response(200, [], json_encode($response, JSON_THROW_ON_ERROR))
+            ));
+
+        /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
+        $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
+        $result = $apiClient->updateMetadataFields(
+            'a02e2968-9378-59bb-85a1-fa56d8d50000',
+            ['wp_id' => '42', 'public_id' => 'test-image']
+        );
+
+        expect($result)
+            ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
+            ->and($result->uuid)->toEqual($response['file']['uuid'])
+            ->and($result->meta)->toBeInstanceOf(\Illuminate\Support\Collection::class)
+            ->and($result->meta->get('wp_id'))->toEqual('42');
+    }
+);
+
+it(
+    'updates metadata fields asynchronously',
+    function () {
+
+        $response = loadFixture('scaleflex-file-meta-update', 'response');
+
+        $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
+        $baseApiClient->shouldReceive('requestAsync')
+            ->once()
+            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(
+                new \GuzzleHttp\Psr7\Response(200, [], json_encode($response, JSON_THROW_ON_ERROR))
+            ));
+
+        /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
+        $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
+        $promise = $apiClient->updateMetadataFieldsAsync(
+            'a02e2968-9378-59bb-85a1-fa56d8d50000',
+            ['wp_id' => '42']
+        );
+
+        expect($promise)->toBeInstanceOf(\GuzzleHttp\Promise\PromiseInterface::class);
+    }
+);
+
+it(
+    'returns true when connection check succeeds',
+    function () {
+
+        $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
+        $baseApiClient->shouldReceive('getAsync')
+            ->once()
+            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(
+                new \GuzzleHttp\Psr7\Response(200, [], json_encode(['status' => 'success', 'files' => []]))
+            ));
+
+        /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
+        $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
+
+        expect($apiClient->checkConnection())->toBeTrue();
+    }
+);
+
+it(
+    'returns false when connection check fails',
+    function () {
+
+        $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
+        $baseApiClient->shouldReceive('getAsync')
+            ->once()
+            ->andThrow(new \GuzzleHttp\Exception\ConnectException(
+                'Connection refused',
+                new \GuzzleHttp\Psr7\Request('GET', 'files')
+            ));
+
+        /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
+        $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
+
+        expect($apiClient->checkConnection())->toBeFalse();
+    }
+);

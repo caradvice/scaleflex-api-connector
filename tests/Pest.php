@@ -17,11 +17,11 @@ function loadFixture($file, $key, $override = null, $value = null)
 {
     $fixture = json_decode(file_get_contents(__DIR__ . "/../storage/tests/fixtures/{$file}.json"), true, 512, JSON_THROW_ON_ERROR)[$key];
 
-    if(!is_null($override)) {
+    if (!is_null($override)) {
 
         $replacement = is_array($override) ? $override : [$override => $value];
 
-        foreach($replacement as $a => $b) {
+        foreach ($replacement as $a => $b) {
 
             Arr::set($fixture, $a, $b);
         }

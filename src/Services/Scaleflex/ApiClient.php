@@ -59,7 +59,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
             ],
         ];
 
-        if($overwrite) {
+        if ($overwrite) {
 
             $query['obfuscate'] = 'KEEP_ORIGINAL_NAME';
         }
@@ -88,7 +88,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
     {
         $query = ['folder' => $folder];
 
-        if($overwrite) {
+        if ($overwrite) {
 
             $query['obfuscate'] = 'KEEP_ORIGINAL_NAME';
         }
@@ -112,7 +112,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
     {
         $query = ['folder' => $folder];
 
-        if($overwrite) {
+        if ($overwrite) {
 
             $query['obfuscate'] = 'KEEP_ORIGINAL_NAME';
         }
@@ -123,7 +123,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
             'meta'        => array_merge($meta, ['tagging' => $tags]),
         ];
 
-        if($fileName) {
+        if ($fileName) {
 
             $body['name'] = $fileName;
         }
@@ -160,5 +160,43 @@ class ApiClient extends BaseApiClient implements ApiClientContract
                     return $results;
                 }
             );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function updateMetadataFields(string $uuid, array $meta): FileDetails
+    {
+        return $this->updateMetadataFieldsAsync($uuid, $meta)->wait();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function updateMetadataFieldsAsync(string $uuid, array $meta): PromiseInterface
+    {
+        return $this->patchAsync(
+            "files/{$uuid}",
+            [
+                'headers' => ['Content-Type' => 'application/json'],
+                'json'    => ['meta' => $meta],
+            ]
+        )->then(fn (ResponseInterface $response) => FileDetails::make(
+            json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)
+        ));
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function checkConnection(): bool
+    {
+        try {
+            $this->get('files', ['query' => ['limit' => 1]]);
+
+            return true;
+        } catch (\Throwable) {
+            return false;
+        }
     }
 }

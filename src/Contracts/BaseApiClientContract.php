@@ -34,4 +34,18 @@ interface BaseApiClientContract
      * @return PromiseInterface
      */
     public function postAsync(string $uri, array $options = []): PromiseInterface;
+
+    /**
+     * @param  string  $uri
+     * @param  array<string, mixed>  $options
+     * @return ResponseInterface
+     */
+    public function patch(string $uri, array $options = []): ResponseInterface;
+
+    /**
+     * @param  string  $uri
+     * @param  array<string, mixed>  $options
+     * @return PromiseInterface
+     */
+    public function patchAsync(string $uri, array $options = []): PromiseInterface;
 }
