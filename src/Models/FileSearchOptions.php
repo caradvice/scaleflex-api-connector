@@ -164,7 +164,7 @@ class FileSearchOptions implements Arrayable
      */
     public function fileSize(int $maxFileSize, int $minFileSize = 0): FileSearchOptions
     {
-        if($minFileSize > $maxFileSize) {
+        if ($minFileSize > $maxFileSize) {
 
             throw new \InvalidArgumentException('Minimum file size cannot be greater than maximum file size');
         }
@@ -468,11 +468,11 @@ class FileSearchOptions implements Arrayable
         $class = new ReflectionClass($this);
         $properties = [];
 
-        foreach($class->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED) as $property) {
+        foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED) as $property) {
 
             $propertyName = $property->getName();
 
-            if(isset($this->$propertyName)) {
+            if (isset($this->$propertyName)) {
 
                 $propertyValue = $this->$propertyName;
                 $parameterValueFunction = 'to' . strtoupper($propertyName) . 'ParameterValue';
@@ -561,9 +561,9 @@ class FileSearchOptions implements Arrayable
      */
     protected function toParameterValue(\BackedEnum|array|string $value): string
     {
-        if(is_array($value)) {
+        if (is_array($value)) {
 
-            if(array_is_list($value)) {
+            if (array_is_list($value)) {
 
 
                 array_walk($value, fn (&$item, $key) => $item = $this->toParameterValue($item));
@@ -575,7 +575,7 @@ class FileSearchOptions implements Arrayable
             }
 
             $value = implode($separator, $value);
-        } elseif($value instanceof \BackedEnum) {
+        } elseif ($value instanceof \BackedEnum) {
 
             $value = $value->value;
         }
@@ -602,12 +602,12 @@ class FileSearchOptions implements Arrayable
      */
     protected function checkEnumArray(array $array, string $enumClass): void
     {
-        foreach($array as $enum) {
+        foreach ($array as $enum) {
 
-            if(is_string($enum)) {
+            if (is_string($enum)) {
 
                 $enumClass::tryFrom($enum) ?? throw new \InvalidArgumentException("\"{$enum}\" is not a valid image mime type");
-            } elseif(!$enum instanceof $enumClass) {
+            } elseif (!$enum instanceof $enumClass) {
 
                 throw new \InvalidArgumentException("Invalid {$enumClass} provided");
             }

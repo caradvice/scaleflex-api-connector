@@ -35,7 +35,7 @@ class BaseApiClient implements BaseApiClientContract
      */
     public function getAsync(string $uri, array $options = []): PromiseInterface
     {
-        return $this->client->getAsync($uri, $options);
+        return $this->client->requestAsync('GET', $uri, $options);
     }
 
     /**
@@ -52,5 +52,21 @@ class BaseApiClient implements BaseApiClientContract
     public function postAsync(string $uri, array $options = []): PromiseInterface
     {
         return $this->client->requestAsync('POST', $uri, $options);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function patch(string $uri, array $options = []): ResponseInterface
+    {
+        return $this->patchAsync($uri, $options)->wait();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function patchAsync(string $uri, array $options = []): PromiseInterface
+    {
+        return $this->client->requestAsync('PATCH', $uri, $options);
     }
 }

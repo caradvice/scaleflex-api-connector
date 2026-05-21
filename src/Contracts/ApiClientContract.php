@@ -99,4 +99,29 @@ interface ApiClientContract
      * @return PromiseInterface
      */
     public function searchAsync(FileSearchOptions $options): PromiseInterface;
+
+    /**
+     * Update the metadata fields of an existing file.
+     *
+     * @param  string  $uuid
+     * @param  array<string, mixed>  $meta  Key-value pairs merged into the file's meta object
+     * @return FileDetails
+     * @link https://developers.scaleflex.com/
+     */
+    public function updateMetadataFields(string $uuid, array $meta): FileDetails;
+
+    /**
+     * @param  string  $uuid
+     * @param  array<string, mixed>  $meta
+     * @return PromiseInterface
+     */
+    public function updateMetadataFieldsAsync(string $uuid, array $meta): PromiseInterface;
+
+    /**
+     * Verify connectivity and credentials against the Scaleflex API.
+     * Returns true on a 2xx response, false on any error or exception.
+     *
+     * @return bool
+     */
+    public function checkConnection(): bool;
 }
