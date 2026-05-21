@@ -178,7 +178,6 @@ class ApiClient extends BaseApiClient implements ApiClientContract
         return $this->patchAsync(
             "files/{$uuid}",
             [
-                'headers' => ['Content-Type' => 'application/json'],
                 'json'    => ['meta' => $meta],
             ]
         )->then(fn (ResponseInterface $response) => FileDetails::make(

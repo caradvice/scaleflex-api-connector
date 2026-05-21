@@ -35,7 +35,7 @@ class BaseApiClient implements BaseApiClientContract
      */
     public function getAsync(string $uri, array $options = []): PromiseInterface
     {
-        return $this->client->getAsync($uri, $options);
+        return $this->client->requestAsync('GET', $uri, $options);
     }
 
     /**
