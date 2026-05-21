@@ -7,8 +7,9 @@ it(
         $response = loadFixture('scaleflex-file-details', 'response');
 
         $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
-        $baseApiClient->shouldReceive('getAsync')
+        $baseApiClient->shouldReceive('requestAsync')
             ->once()
+            ->withArgs(fn (string $method) => $method === 'GET')
             ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response))));
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
@@ -34,8 +35,9 @@ it(
         $response = loadFixture('scaleflex-file-details', 'response');
 
         $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
-        $baseApiClient->shouldReceive('getAsync')
+        $baseApiClient->shouldReceive('requestAsync')
             ->once()
+            ->withArgs(fn (string $method) => $method === 'GET')
             ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(new \GuzzleHttp\Psr7\Response(200, [], json_encode($response))));
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
@@ -284,8 +286,9 @@ it(
     function () {
 
         $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
-        $baseApiClient->shouldReceive('getAsync')
+        $baseApiClient->shouldReceive('requestAsync')
             ->once()
+            ->withArgs(fn (string $method) => $method === 'GET')
             ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(
                 new \GuzzleHttp\Psr7\Response(200, [], json_encode(['status' => 'success', 'files' => []]))
             ));
@@ -302,8 +305,9 @@ it(
     function () {
 
         $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
-        $baseApiClient->shouldReceive('getAsync')
+        $baseApiClient->shouldReceive('requestAsync')
             ->once()
+            ->withArgs(fn (string $method) => $method === 'GET')
             ->andThrow(new \GuzzleHttp\Exception\ConnectException(
                 'Connection refused',
                 new \GuzzleHttp\Psr7\Request('GET', 'files')
