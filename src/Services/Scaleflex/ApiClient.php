@@ -12,6 +12,7 @@ use GuzzleHttp\Psr7\Query;
 use GuzzleHttp\Psr7\Utils;
 use Illuminate\Support\Collection;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 class ApiClient extends BaseApiClient implements ApiClientContract
 {
@@ -51,7 +52,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
             [
                 'name'     => 'file',
                 'filename' => $fileName ?? null,
-                'contents' => is_resource($file) ? $file : Utils::tryFopen($file, 'r'),
+                'contents' => is_resource($file) || $file instanceof StreamInterface ? $file : Utils::tryFopen((string) $file, 'r'),
             ],
             [
                 'name'     => 'meta',
@@ -119,7 +120,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
 
         $body = [
             'postactions' => 'decode_base64',
-            'data'        => base64_encode(is_resource($file) ? Utils::tryGetContents($file) : Utils::tryGetContents(Utils::tryFopen($file, 'r'))),
+            'data'        => base64_encode($file instanceof StreamInterface ? $file->getContents() : Utils::tryGetContents(is_resource($file) ? $file : Utils::tryFopen((string) $file, 'r'))),
             'meta'        => array_merge($meta, ['tagging' => $tags]),
         ];
 
@@ -165,20 +166,20 @@ class ApiClient extends BaseApiClient implements ApiClientContract
     /**
      * @inheritDoc
      */
-    public function updateMetadataFields(string $uuid, array $meta): FileDetails
+    public function updateMetadataFields(string $uuid, string $name, array $meta): FileDetails
     {
-        return $this->updateMetadataFieldsAsync($uuid, $meta)->wait();
+        return $this->updateMetadataFieldsAsync($uuid, $name, $meta)->wait();
     }
 
     /**
      * @inheritDoc
      */
-    public function updateMetadataFieldsAsync(string $uuid, array $meta): PromiseInterface
+    public function updateMetadataFieldsAsync(string $uuid, string $name, array $meta): PromiseInterface
     {
         return $this->patchAsync(
             "files/{$uuid}",
             [
-                'json'    => ['meta' => $meta],
+                'json' => ['name' => $name, 'meta' => $meta],
             ]
         )->then(fn (ResponseInterface $response) => FileDetails::make(
             json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)

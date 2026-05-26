@@ -104,18 +104,20 @@ interface ApiClientContract
      * Update the metadata fields of an existing file.
      *
      * @param  string  $uuid
+     * @param  string  $name  Filename (e.g. 'example.jpg') — required by the Scaleflex v4 PATCH contract
      * @param  array<string, mixed>  $meta  Key-value pairs merged into the file's meta object
      * @return FileDetails
      * @link https://developers.scaleflex.com/
      */
-    public function updateMetadataFields(string $uuid, array $meta): FileDetails;
+    public function updateMetadataFields(string $uuid, string $name, array $meta): FileDetails;
 
     /**
      * @param  string  $uuid
+     * @param  string  $name  Filename (e.g. 'example.jpg') — required by the Scaleflex v4 PATCH contract
      * @param  array<string, mixed>  $meta
      * @return PromiseInterface
      */
-    public function updateMetadataFieldsAsync(string $uuid, array $meta): PromiseInterface;
+    public function updateMetadataFieldsAsync(string $uuid, string $name, array $meta): PromiseInterface;
 
     /**
      * Verify connectivity and credentials against the Scaleflex API.

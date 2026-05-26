@@ -231,6 +231,7 @@ it(
     function () {
 
         $response = loadFixture('scaleflex-file-meta-update', 'response');
+        $capturedBody = null;
 
         $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
         $baseApiClient->shouldReceive('requestAsync')
@@ -238,14 +239,19 @@ it(
             ->withArgs(function (string $method) {
                 return $method === 'PATCH';
             })
-            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(
-                new \GuzzleHttp\Psr7\Response(200, [], json_encode($response, JSON_THROW_ON_ERROR))
-            ));
+            ->andReturnUsing(function (string $method, $uri, array $options) use (&$capturedBody, $response) {
+                $capturedBody = $options['json'] ?? null;
+
+                return new \GuzzleHttp\Promise\FulfilledPromise(
+                    new \GuzzleHttp\Psr7\Response(200, [], json_encode($response, JSON_THROW_ON_ERROR))
+                );
+            });
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
         $result = $apiClient->updateMetadataFields(
             'a02e2968-9378-59bb-85a1-fa56d8d50000',
+            'test-image.jpg',
             ['wp_id' => '42', 'public_id' => 'test-image']
         );
 
@@ -253,7 +259,9 @@ it(
             ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
             ->and($result->uuid)->toEqual($response['file']['uuid'])
             ->and($result->meta)->toBeInstanceOf(\Illuminate\Support\Collection::class)
-            ->and($result->meta->get('wp_id'))->toEqual('42');
+            ->and($result->meta->get('wp_id'))->toEqual('42')
+            ->and($capturedBody)->toHaveKey('name', 'test-image.jpg')
+            ->and($capturedBody)->toHaveKey('meta', ['wp_id' => '42', 'public_id' => 'test-image']);
     }
 );
 
@@ -274,6 +282,7 @@ it(
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
         $promise = $apiClient->updateMetadataFieldsAsync(
             'a02e2968-9378-59bb-85a1-fa56d8d50000',
+            'test-image.jpg',
             ['wp_id' => '42']
         );
 
