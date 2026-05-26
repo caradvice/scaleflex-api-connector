@@ -165,20 +165,20 @@ class ApiClient extends BaseApiClient implements ApiClientContract
     /**
      * @inheritDoc
      */
-    public function updateMetadataFields(string $uuid, array $meta): FileDetails
+    public function updateMetadataFields(string $uuid, string $name, array $meta): FileDetails
     {
-        return $this->updateMetadataFieldsAsync($uuid, $meta)->wait();
+        return $this->updateMetadataFieldsAsync($uuid, $name, $meta)->wait();
     }
 
     /**
      * @inheritDoc
      */
-    public function updateMetadataFieldsAsync(string $uuid, array $meta): PromiseInterface
+    public function updateMetadataFieldsAsync(string $uuid, string $name, array $meta): PromiseInterface
     {
         return $this->patchAsync(
             "files/{$uuid}",
             [
-                'json'    => ['meta' => $meta],
+                'json' => ['name' => $name, 'meta' => $meta],
             ]
         )->then(fn (ResponseInterface $response) => FileDetails::make(
             json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)
