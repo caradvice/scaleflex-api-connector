@@ -166,24 +166,28 @@ class ApiClient extends BaseApiClient implements ApiClientContract
     /**
      * @inheritDoc
      */
-    public function updateMetadataFields(string $uuid, string $name, array $meta): FileDetails
+    public function updateMetadata(string $uuid, array $meta): void
     {
-        return $this->updateMetadataFieldsAsync($uuid, $name, $meta)->wait();
+        $this->updateMetadataAsync($uuid, $meta)->wait();
     }
 
     /**
      * @inheritDoc
      */
-    public function updateMetadataFieldsAsync(string $uuid, string $name, array $meta): PromiseInterface
+    public function updateMetadataAsync(string $uuid, array $meta): PromiseInterface
     {
         return $this->patchAsync(
-            "files/{$uuid}",
-            [
-                'json' => ['name' => $name, 'meta' => $meta],
-            ]
-        )->then(fn (ResponseInterface $response) => FileDetails::make(
-            json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)
-        ));
+            "file/{$uuid}/meta",
+            ['json' => ['meta' => $meta]]
+        )->then(function (ResponseInterface $response): void {
+            $body = json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+
+            if (($body['status'] ?? '') !== 'success') {
+                throw new \RuntimeException(
+                    'Scaleflex v5 meta update failed: ' . json_encode($body, JSON_THROW_ON_ERROR)
+                );
+            }
+        });
     }
 
     /**

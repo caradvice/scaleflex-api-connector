@@ -101,23 +101,26 @@ interface ApiClientContract
     public function searchAsync(FileSearchOptions $options): PromiseInterface;
 
     /**
-     * Update the metadata fields of an existing file.
+     * Push metadata to Scaleflex using the v5 metadata-only endpoint.
+     * Does not rename or touch the file — idempotent and safe to call on every save.
      *
-     * @param  string  $uuid
-     * @param  string  $name  Filename (e.g. 'example.jpg') — required by the Scaleflex v4 PATCH contract
-     * @param  array<string, mixed>  $meta  Key-value pairs merged into the file's meta object
-     * @return FileDetails
+     * Endpoint: PATCH /v5/file/{uuid}/meta
+     *
+     * @param  string  $uuid  Scaleflex file UUID
+     * @param  array<string, mixed>  $meta  Key-value pairs to merge into the file's meta object
+     * @return void
      * @link https://developers.scaleflex.com/
      */
-    public function updateMetadataFields(string $uuid, string $name, array $meta): FileDetails;
+    public function updateMetadata(string $uuid, array $meta): void;
 
     /**
+     * Async variant of updateMetadata(). Rejects with \RuntimeException on non-success response.
+     *
      * @param  string  $uuid
-     * @param  string  $name  Filename (e.g. 'example.jpg') — required by the Scaleflex v4 PATCH contract
      * @param  array<string, mixed>  $meta
      * @return PromiseInterface
      */
-    public function updateMetadataFieldsAsync(string $uuid, string $name, array $meta): PromiseInterface;
+    public function updateMetadataAsync(string $uuid, array $meta): PromiseInterface;
 
     /**
      * Verify connectivity and credentials against the Scaleflex API.
