@@ -227,66 +227,79 @@ it('searches files synchronously', function () {
 });
 
 it(
-    'updates metadata fields synchronously',
+    'pushes metadata to v5 endpoint synchronously',
     function () {
 
-        $response = loadFixture('scaleflex-file-meta-update', 'response');
-        $capturedBody = null;
+        $capturedMethod = null;
+        $capturedUri    = null;
+        $capturedBody   = null;
 
         $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
         $baseApiClient->shouldReceive('requestAsync')
             ->once()
-            ->withArgs(function (string $method) {
-                return $method === 'PATCH';
-            })
-            ->andReturnUsing(function (string $method, $uri, array $options) use (&$capturedBody, $response) {
-                $capturedBody = $options['json'] ?? null;
+            ->andReturnUsing(function (string $method, string $uri, array $options) use (&$capturedMethod, &$capturedUri, &$capturedBody) {
+                $capturedMethod = $method;
+                $capturedUri    = $uri;
+                $capturedBody   = $options['json'] ?? null;
 
                 return new \GuzzleHttp\Promise\FulfilledPromise(
-                    new \GuzzleHttp\Psr7\Response(200, [], json_encode($response, JSON_THROW_ON_ERROR))
+                    new \GuzzleHttp\Psr7\Response(200, [], json_encode(['status' => 'success', 'action' => 'meta_updated']))
                 );
             });
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
-        $result = $apiClient->updateMetadataFields(
+        $apiClient->updateMetadata(
             'a02e2968-9378-59bb-85a1-fa56d8d50000',
-            'test-image.jpg',
-            ['wp_id' => '42', 'public_id' => 'test-image']
+            ['title' => 'My Photo', 'alt' => 'Alt text', 'caption' => '', 'description' => '']
         );
 
-        expect($result)
-            ->toBeInstanceOf(\Drive\ScaleflexApiConnector\Models\FileDetails::class)
-            ->and($result->uuid)->toEqual($response['file']['uuid'])
-            ->and($result->meta)->toBeInstanceOf(\Illuminate\Support\Collection::class)
-            ->and($result->meta->get('wp_id'))->toEqual('42')
-            ->and($capturedBody)->toHaveKey('name', 'test-image.jpg')
-            ->and($capturedBody)->toHaveKey('meta', ['wp_id' => '42', 'public_id' => 'test-image']);
+        expect($capturedMethod)->toBe('PATCH')
+            ->and($capturedUri)->toContain('file/a02e2968-9378-59bb-85a1-fa56d8d50000/meta')
+            ->and($capturedBody)->toHaveKey('meta')
+            ->and($capturedBody['meta'])->toMatchArray(['title' => 'My Photo', 'alt' => 'Alt text'])
+            ->and($capturedBody)->not->toHaveKey('name');
     }
 );
 
 it(
-    'updates metadata fields asynchronously',
+    'pushes metadata to v5 endpoint asynchronously',
     function () {
-
-        $response = loadFixture('scaleflex-file-meta-update', 'response');
 
         $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
         $baseApiClient->shouldReceive('requestAsync')
             ->once()
             ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(
-                new \GuzzleHttp\Psr7\Response(200, [], json_encode($response, JSON_THROW_ON_ERROR))
+                new \GuzzleHttp\Psr7\Response(200, [], json_encode(['status' => 'success', 'action' => 'meta_updated']))
             ));
 
         /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
         $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
-        $promise = $apiClient->updateMetadataFieldsAsync(
+        $promise = $apiClient->updateMetadataAsync(
             'a02e2968-9378-59bb-85a1-fa56d8d50000',
-            'test-image.jpg',
-            ['wp_id' => '42']
+            ['title' => 'Test']
         );
 
         expect($promise)->toBeInstanceOf(\GuzzleHttp\Promise\PromiseInterface::class);
+    }
+);
+
+it(
+    'throws RuntimeException when v5 meta update returns non-success status',
+    function () {
+
+        $baseApiClient = $this->mock('overload:' . \GuzzleHttp\Client::class);
+        $baseApiClient->shouldReceive('requestAsync')
+            ->once()
+            ->andReturn(new \GuzzleHttp\Promise\FulfilledPromise(
+                new \GuzzleHttp\Psr7\Response(500, [], json_encode(['status' => 'error', 'message' => 'Server error']))
+            ));
+
+        /** @var \Drive\ScaleflexApiConnector\Contracts\ApiClientContract $apiClient */
+        $apiClient = $this->app->make(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
+
+        expect(fn () => $apiClient->updateMetadata('a02e2968-9378-59bb-85a1-fa56d8d50000', ['title' => 'Test']))
+            ->toThrow(\RuntimeException::class);
     }
 );
 
