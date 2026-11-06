@@ -130,7 +130,7 @@ it(
             )
             ->and($params['q'])
             ->toBeString()
-            ->toEqual('"foo":"bar"+"baz":"qux"')
+            ->toEqual('"foo":"bar"+"baz":"qux"+"#tag1"+"#tag2"+"test-image"')
             ->and($params['recursive'])
             ->toBeString()
             ->toEqual('1')
@@ -263,3 +263,59 @@ it('throws an exception when giving an invalid enum within an array', function (
     $searchOptions = (new \Drive\ScaleflexApiConnector\Models\FileSearchOptions())
         ->orientation(['LD', 'PO', \Drive\ScaleflexApiConnector\Enums\Resolution::LARGE]);
 })->throws(\InvalidArgumentException::class);
+
+it('builds the q parameter from the fuzzy search term alone', function () {
+
+    $params = (new \Drive\ScaleflexApiConnector\Models\FileSearchOptions())
+        ->folder('/test/images/')
+        ->fuzzySearch('test-image')
+        ->toParameterArray();
+
+    expect($params)
+        ->toHaveKey('q', '"test-image"')
+        ->not->toHaveKeys(['fuzzy_search', 'fuzzySearch', 'tag', 'tags', 'meta']);
+});
+
+it('builds the q parameter from tags alone', function () {
+
+    $params = (new \Drive\ScaleflexApiConnector\Models\FileSearchOptions())
+        ->tags(['tag1', 'tag2'])
+        ->toParameterArray();
+
+    expect($params)
+        ->toHaveKey('q', '"#tag1"+"#tag2"')
+        ->not->toHaveKeys(['fuzzy_search', 'fuzzySearch', 'tag', 'tags', 'meta']);
+});
+
+it('builds the q parameter from meta alone', function () {
+
+    $params = (new \Drive\ScaleflexApiConnector\Models\FileSearchOptions())
+        ->meta(['foo' => 'bar', 'baz' => 'qux'])
+        ->toParameterArray();
+
+    expect($params)
+        ->toHaveKey('q', '"foo":"bar"+"baz":"qux"')
+        ->not->toHaveKeys(['fuzzy_search', 'fuzzySearch', 'tag', 'tags', 'meta']);
+});
+
+it('combines meta, tags and the fuzzy search term in that order within the q parameter', function () {
+
+    $params = (new \Drive\ScaleflexApiConnector\Models\FileSearchOptions())
+        ->fuzzySearch('test-image')
+        ->tags(['tag1', 'tag2'])
+        ->meta(['foo' => 'bar'])
+        ->toParameterArray();
+
+    expect($params)
+        ->toHaveKey('q', '"foo":"bar"+"#tag1"+"#tag2"+"test-image"')
+        ->not->toHaveKeys(['fuzzy_search', 'fuzzySearch', 'tag', 'tags', 'meta']);
+});
+
+it('omits the q parameter when there is nothing to search for', function () {
+
+    $params = (new \Drive\ScaleflexApiConnector\Models\FileSearchOptions())
+        ->folder('/test/images/')
+        ->toParameterArray();
+
+    expect($params)->not->toHaveKey('q');
+});
