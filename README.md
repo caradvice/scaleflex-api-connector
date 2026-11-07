@@ -7,9 +7,10 @@ The Scaleflex PHP API Connector is a powerful tool designed to seamlessly integr
 
 #### Requirements:
 
-- PHP ^8.1
+- PHP ^8.2
 - composer
-- Laravel ^10.0
+- Laravel (or `illuminate/support` and `illuminate/config`) 10.48+, 11, 12 or 13
+- Guzzle ^7.8.1 or ^8, PSR-7 ^2.6 or ^3
 
 #### Usage:
 
@@ -24,6 +25,9 @@ The Scaleflex PHP API Connector is a powerful tool designed to seamlessly integr
 - Set required environment variable values
   - `SCALEFLEX_CONTAINER_ID` - Container ID (can be found in Scaleflex hub)
   - `SCALEFLEX_API_KEY` - API key for Scaleflex API
+- Optional environment variables
+  - `SCALEFLEX_CONNECT_TIMEOUT` - seconds to wait for a connection (default `5`, `0` disables)
+  - `SCALEFLEX_TIMEOUT` - seconds to wait for the whole request, including uploads (default `30`, `0` disables)
 
 #### Endpoint Coverage:
 

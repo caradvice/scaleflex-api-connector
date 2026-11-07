@@ -8,14 +8,13 @@
         }
     ],
     "type": "library",
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true,
     "license": "GPL-3.0-only",
     "require": {
         "php": "^8.2",
-        "dragon-code/simple-dto": "^2.8",
-        "guzzlehttp/guzzle": "^7.8.1",
-        "guzzlehttp/psr7": "^2.6",
+        "guzzlehttp/guzzle": "^7.8.1|^8.0",
+        "guzzlehttp/psr7": "^2.6|^3.0",
         "illuminate/config": "^10.48|^11.0|^12.0|^13.0",
         "illuminate/support": "^10.48|^11.0|^12.0|^13.0"
     },
@@ -23,9 +22,9 @@
         "laravel/pint": "^1.14",
         "mockery/mockery": "^1.6",
         "orchestra/testbench": "^8.22|^9.0|^10.0|^11.0",
-        "pestphp/pest": "^2.34|^3.0",
-        "pestphp/pest-plugin-laravel": "^2.3|^3.0",
-        "phpstan/phpstan": "^1.10"
+        "pestphp/pest": "^2.34|^3.0|^4.0|^5.0",
+        "pestphp/pest-plugin-laravel": "^2.3|^3.0|^4.0|^5.0",
+        "phpstan/phpstan": "^2.0"
     },
     "autoload": {
         "psr-4": {
