@@ -86,3 +86,48 @@ it(
         ;
     }
 );
+
+/**
+ * @return array<string, mixed>
+ */
+function scaleflexGuzzleConfig(): array
+{
+    $apiClient = app(\Drive\ScaleflexApiConnector\Contracts\ApiClientContract::class);
+    $guzzle = (new ReflectionProperty($apiClient, 'client'))->getValue($apiClient);
+
+    return (new ReflectionProperty($guzzle, 'config'))->getValue($guzzle);
+}
+
+it(
+    'applies default connect and total timeouts',
+    function () {
+
+        expect(scaleflexGuzzleConfig())
+            ->toHaveKey('connect_timeout', 5.0)
+            ->toHaveKey('timeout', 30.0);
+    }
+);
+
+it(
+    'applies configured timeouts',
+    function () {
+
+        config(['scaleflex.connect_timeout' => 2, 'scaleflex.timeout' => 120]);
+
+        expect(scaleflexGuzzleConfig())
+            ->toHaveKey('connect_timeout', 2)
+            ->toHaveKey('timeout', 120);
+    }
+);
+
+it(
+    'falls back to default timeouts when the config predates them',
+    function () {
+
+        config(['scaleflex' => ['uri' => 'https://api.filerobot.com/123/v5/', 'container_id' => '123', 'api_key' => '123']]);
+
+        expect(scaleflexGuzzleConfig())
+            ->toHaveKey('connect_timeout', 5)
+            ->toHaveKey('timeout', 30);
+    }
+);

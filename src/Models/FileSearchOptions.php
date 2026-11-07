@@ -106,7 +106,7 @@ class FileSearchOptions implements Arrayable
      * @param  string|null  $folder
      * @param  bool  $recursive
      */
-    public function __construct(string $fuzzySearch = null, string $folder = null, bool $recursive = true)
+    public function __construct(?string $fuzzySearch = null, ?string $folder = null, bool $recursive = true)
     {
         $fuzzySearch ? $this->fuzzySearch($fuzzySearch) : null;
         $folder ? $this->folder($folder) : null;

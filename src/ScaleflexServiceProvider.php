@@ -34,8 +34,11 @@ class ScaleflexServiceProvider extends ServiceProvider implements DeferrableProv
                 function () use ($config) {
                     return new Client(
                         [
-                            'base_uri' => $config->get('scaleflex.uri'),
-                            'headers'  => [
+                            'base_uri'        => $config->get('scaleflex.uri'),
+                            // Fallbacks cover a config cache built before these keys existed.
+                            'timeout'         => $config->get('scaleflex.timeout', 30),
+                            'connect_timeout' => $config->get('scaleflex.connect_timeout', 5),
+                            'headers'         => [
                                 'X-Filerobot-Key' => $config->get('scaleflex.api_key'),
                                 'User-Agent'      => self::$userAgent
                             ],
