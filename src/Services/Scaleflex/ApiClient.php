@@ -37,7 +37,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
      * @inheritDoc
      * @throws \JsonException
      */
-    public function fileUpload($file, string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): FileDetails
+    public function fileUpload($file, ?string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): FileDetails
     {
         return $this->fileUploadAsync($file, $fileName, $meta, $tags, $folder, $overwrite)->wait();
     }
@@ -45,7 +45,7 @@ class ApiClient extends BaseApiClient implements ApiClientContract
     /**
      * @inheritDoc
      */
-    public function fileUploadAsync($file, string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): PromiseInterface
+    public function fileUploadAsync($file, ?string $fileName = null, array $meta = [], array $tags = [], string $folder = '/', bool $overwrite = false): PromiseInterface
     {
         $query = ['folder' => $folder];
         $body = [
