@@ -11,29 +11,77 @@ permissions:
 
 jobs:
   build:
+    name: PHP ${{ matrix.php }} (${{ matrix.deps }} deps)
 
     runs-on: ubuntu-latest
 
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # The committed lock is pinned to the PHP floor (config.platform.php).
+          - php: '8.2'
+            deps: locked
+            coverage: pcov
+          # Unpinned resolve, so the newest majors consumers can install are tested too.
+          - php: '8.5'
+            deps: latest
+            coverage: none
+
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v7
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php }}
+        tools: composer:v2
+        coverage: ${{ matrix.coverage }}
 
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
     - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
+      uses: actions/cache@v6
       with:
         path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-php${{ matrix.php }}-${{ matrix.deps }}-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
-          ${{ runner.os }}-php-
+          ${{ runner.os }}-php${{ matrix.php }}-${{ matrix.deps }}-
 
-    - name: Install dependencies
+    - name: Install locked dependencies
+      if: matrix.deps == 'locked'
       run: composer install --prefer-dist --no-progress
 
-    # Add a test script to composer.json, for instance: "test": "vendor/bin/phpunit"
-    # Docs: https://getcomposer.org/doc/articles/scripts.md
+    - name: Resolve latest dependencies
+      if: matrix.deps == 'latest'
+      run: |
+        composer config --unset platform.php
+        composer update --prefer-dist --no-progress
+
+    - name: Show key package versions
+      run: composer show | grep -E '^(guzzlehttp/(guzzle|psr7) |laravel/framework |orchestra/testbench |pestphp/pest )'
 
     - name: Run test suite
+      if: matrix.coverage == 'none'
       run: composer test
+
+    - name: Run test suite with coverage
+      if: matrix.coverage != 'none'
+      run: composer coverage -- --coverage-clover=code-coverage.xml
+
+    - name: Static analysis
+      run: composer analyse
+
+    - name: Code style
+      if: matrix.deps == 'locked'
+      run: vendor/bin/pint --test
+
+    - name: Upload coverage reports to Codecov
+      if: matrix.coverage != 'none'
+      uses: codecov/codecov-action@v7
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: caradvice/scaleflex-api-connector
+        files: code-coverage.xml
+        verbose: true
