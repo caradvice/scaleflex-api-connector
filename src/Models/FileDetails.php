@@ -3,11 +3,17 @@
 namespace Drive\ScaleflexApiConnector\Models;
 
 use Carbon\CarbonImmutable;
-use DragonCode\SimpleDataTransferObject\DataTransferObject;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use ReflectionClass;
+use ReflectionProperty;
 
 /**
+ * Hydration mirrors dragon-code/simple-dto 2.8, which this class used to extend: dot-notation `$map`
+ * entries are applied first, then top-level keys matching a property name, each through its cast method.
+ *
  * @property string $uuid
  * @property string $name
  * @property int $height
@@ -34,8 +40,12 @@ use Illuminate\Support\Str;
  * @property Collection $visibility
  * @property CarbonImmutable $createdAt
  * @property CarbonImmutable $modifiedAt
+ *
+ * @phpstan-consistent-constructor
+ *
+ * @implements Arrayable<string, mixed>
  */
-class FileDetails extends DataTransferObject
+class FileDetails implements Arrayable
 {
     /**
      * @var string[]
@@ -198,6 +208,123 @@ class FileDetails extends DataTransferObject
      * @var CarbonImmutable|null
      */
     public ?CarbonImmutable $modifiedAt = null;
+
+    /**
+     * @param  array<array-key, mixed>  $items
+     */
+    public function __construct(array $items = [])
+    {
+        $this->merge($items);
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $items
+     */
+    public static function make(array $items = []): static
+    {
+        return new static($items);
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $items
+     */
+    public static function fromArray(array $items): static
+    {
+        return new static($items);
+    }
+
+    public static function fromJson(string $json): static
+    {
+        return new static(json_decode($json, true));
+    }
+
+    public static function fromObject(object $object): static
+    {
+        return new static(method_exists($object, 'toArray') ? $object->toArray() : get_object_vars($object));
+    }
+
+    /**
+     * @param  array<array-key, mixed>  $items
+     * @return $this
+     */
+    public function merge(array $items): static
+    {
+        foreach ($this->map as $from => $to) {
+            if (Arr::has($items, $from)) {
+                $this->setValue($to, Arr::get($items, $from));
+            }
+        }
+
+        foreach ($items as $key => $value) {
+            $this->setValue((string) $key, $value);
+        }
+
+        return $this;
+    }
+
+    public function get(string $key): mixed
+    {
+        if (! $this->isAllowed($key)) {
+            throw new \Error('Cannot access private property ' . static::class . '::$' . $key);
+        }
+
+        return $this->{$key};
+    }
+
+    /**
+     * @return $this
+     */
+    public function set(string $key, mixed $value): static
+    {
+        if (! $this->isAllowed($key)) {
+            throw new \Error('Cannot access private property ' . static::class . '::$' . $key);
+        }
+
+        $this->{$key} = $value;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        $result = [];
+
+        foreach ((new ReflectionClass($this))->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
+            $result[$property->getName()] = $this->{$property->getName()};
+        }
+
+        return $result;
+    }
+
+    public function toJson(int $flags = JSON_UNESCAPED_UNICODE): string
+    {
+        return (string) json_encode($this->toArray(), $flags);
+    }
+
+    protected function setValue(string $key, mixed $value): void
+    {
+        if (! $this->isAllowed($key)) {
+            return;
+        }
+
+        $cast = Str::camel('cast_' . trim($key));
+
+        $this->set($key, method_exists($this, $cast) ? $this->{$cast}($value) : $value);
+    }
+
+    protected function isAllowed(string $key): bool
+    {
+        if (Str::lower($key) === 'map' || ! property_exists($this, $key)) {
+            return false;
+        }
+
+        $property = new ReflectionProperty($this, $key);
+
+        return ! $property->isStatic() && ! $property->isPrivate();
+    }
 
     /**
      * @param  string  $value
