@@ -483,7 +483,7 @@ class FileSearchOptions implements Arrayable
             }
         }
 
-        $q = collect([$properties['meta'] ?? null, $properties['tags'] ?? null, $properties['fuzzySearch'] ?? null])->filter()->implode('+');
+        $q = collect([$properties['meta'] ?? null, $properties['tag'] ?? null, $properties['fuzzy_search'] ?? null])->filter()->implode('+');
 
         return collect(['q' => filled($q) ? $q : null, ...$properties])->filter()->except(['fuzzy_search', 'meta', 'tag', 'sort_field', 'sort_order'])->toArray();
     }
